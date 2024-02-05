@@ -146,3 +146,15 @@ https://zestedesavoir.com/tutoriels/1733/termcap-et-terminfo/
 getent, tgetflag, tgetnum, tgetstr, tgoto, tputs : ce sont les 
 fonctions utilisee pour la creation d'interface graphique dans un
 terminal.
+
+
+Fonctions builtins :
+
+echo, cd, pwd, export, unset, env, exit.
+
+
+cd : 
+
+Lorsque j'effectue un cd je dois mettre a jour PWD et OLDPWD, je remplace OLDPWD par
+PWD et je remplace PWD par le nouveau repertoire de travail.
+

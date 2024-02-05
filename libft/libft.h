@@ -6,7 +6,7 @@
 /*   By: yrio <yrio@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 11:47:37 by yrio              #+#    #+#             */
-/*   Updated: 2024/01/23 10:02:58 by yrio             ###   ########.fr       */
+/*   Updated: 2024/02/05 17:10:13 by yrio             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,14 @@
 # include <stdint.h>
 # include <limits.h>
 
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 42
+# endif
+
 int		ft_isdigit(char c);
 int		ft_isalpha(char c);
 size_t	ft_strlen(const char *str);
+int		ft_strcmp(const char *s1, const char *s2);
 int		ft_strncmp(const char *s1, const char *s2, unsigned int n);
 char	*ft_strnstr(const char *str, const char *to_find, size_t n);
 size_t	ft_strlcpy(char *dst, const char *src, size_t size);
@@ -57,6 +62,16 @@ void	ft_putnbr_fd(int n, int fd);
 void	ft_putendl_fd(char *s, int fd);
 char	*ft_itoa(int n);
 int		ft_atoi(const char *str);
+
+char	*ft_strjoin2(char *s1, char *s2);
+size_t	ft_strlen_gnl(char *str);
+
+int		ft_print_ptr(void *ptr, char c);
+int		ft_putunsignednbr(unsigned int n);
+int		ft_print_hexa(void *ptr, char c);
+int		ft_putnbr(int n);
+int		ft_putchar(char c);
+int		ft_printf(const char *format, ...);
 
 typedef struct s_list
 {
