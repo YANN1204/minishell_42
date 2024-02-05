@@ -1,23 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   ft_strchr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yrio <yrio@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/05 08:01:00 by yrio              #+#    #+#             */
-/*   Updated: 2024/02/05 09:58:35 by yrio             ###   ########.fr       */
+/*   Created: 2023/11/09 09:02:26 by yrio              #+#    #+#             */
+/*   Updated: 2023/11/21 10:44:17 by yrio             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-# define MINISHELL_H
+#include "libft.h"
 
-# include <stdio.h>
-# include <string.h>
-# include <unistd.h>
-# include <dirent.h>
-# include <readline/history.h>
-# include <errno.h>
+char	*ft_strchr(const char *s, int c)
+{
+	int	i;
 
-#endif
+	i = 0;
+	while (s[i] != '\0' || s[i] == (char)c)
+	{
+		if (s[i] == (char)c)
+			return ((char *)(s + i));
+		i++;
+	}
+	return (NULL);
+}
+/*
+#include <string.h>
+
+int 	main(void)
+{
+	const char	*s = "bonjour";
+	int 	c = 0;
+
+	printf("ft_strchr : %s", ft_strchr(s, c));
+	return (0);
+}
+*/

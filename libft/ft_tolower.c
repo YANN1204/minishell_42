@@ -1,23 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   ft_tolower.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yrio <yrio@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/05 08:01:00 by yrio              #+#    #+#             */
-/*   Updated: 2024/02/05 09:58:35 by yrio             ###   ########.fr       */
+/*   Created: 2023/11/09 16:35:03 by yrio              #+#    #+#             */
+/*   Updated: 2023/11/15 16:49:37 by yrio             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-# define MINISHELL_H
+#include "libft.h"
 
-# include <stdio.h>
-# include <string.h>
-# include <unistd.h>
-# include <dirent.h>
-# include <readline/history.h>
-# include <errno.h>
+int	ft_tolower(int c)
+{
+	if (c >= 65 && c <= 90)
+		return (c + 32);
+	else
+		return (c);
+}
+/*
+int 	main(void)
+{
+	int 	c = 112;
 
-#endif
+	printf("%c\n", (char)ft_tolower(c));
+	printf("%c\n", (char)tolower(c));
+	return (0);
+}
+*/

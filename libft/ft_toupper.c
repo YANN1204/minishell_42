@@ -1,23 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   ft_toupper.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yrio <yrio@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/05 08:01:00 by yrio              #+#    #+#             */
-/*   Updated: 2024/02/05 09:58:35 by yrio             ###   ########.fr       */
+/*   Created: 2023/11/09 16:42:46 by yrio              #+#    #+#             */
+/*   Updated: 2023/11/15 16:48:54 by yrio             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-# define MINISHELL_H
+#include "libft.h"
 
-# include <stdio.h>
-# include <string.h>
-# include <unistd.h>
-# include <dirent.h>
-# include <readline/history.h>
-# include <errno.h>
+int	ft_toupper(int c)
+{
+	if (c >= 97 && c <= 122)
+		return (c - 32);
+	else
+		return (c);
+}
+/*
+int 	main(void)
+{
+	int 	c = 112;
 
-#endif
+	printf("%c\n", (char)ft_toupper(c));
+	printf("%c\n", (char)toupper(c));
+	return (0);
+}
+*/

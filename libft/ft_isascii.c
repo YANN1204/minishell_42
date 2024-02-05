@@ -1,23 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   ft_isascii.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yrio <yrio@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/05 08:01:00 by yrio              #+#    #+#             */
-/*   Updated: 2024/02/05 09:58:35 by yrio             ###   ########.fr       */
+/*   Created: 2023/11/08 08:11:45 by yrio              #+#    #+#             */
+/*   Updated: 2023/11/15 16:48:15 by yrio             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-# define MINISHELL_H
+#include <string.h>
+#include <ctype.h>
+#include <stdio.h>
 
-# include <stdio.h>
-# include <string.h>
-# include <unistd.h>
-# include <dirent.h>
-# include <readline/history.h>
-# include <errno.h>
+int	ft_isascii(int c)
+{
+	if (c >= 0 && c <= 127)
+		return (1);
+	else
+		return (0);
+}
+/*
+int		main(void)
+{
+	int 	i = -100;
 
-#endif
+	while (i < 200)
+	{
+		printf("ft_isascii %d : %d\n", i, ft_isascii(i));
+		printf("original %d : %d\n", i, isascii(i));
+		i++;
+	}
+	return (0);
+}
+*/

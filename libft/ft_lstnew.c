@@ -1,23 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   ft_lstnew.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yrio <yrio@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/05 08:01:00 by yrio              #+#    #+#             */
-/*   Updated: 2024/02/05 09:58:35 by yrio             ###   ########.fr       */
+/*   Created: 2023/11/14 16:08:54 by yrio              #+#    #+#             */
+/*   Updated: 2023/11/15 16:05:05 by yrio             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-# define MINISHELL_H
+#include "libft.h"
 
-# include <stdio.h>
-# include <string.h>
-# include <unistd.h>
-# include <dirent.h>
-# include <readline/history.h>
-# include <errno.h>
+t_list	*ft_lstnew(void *content)
+{
+	t_list	*new;
 
-#endif
+	new = malloc(sizeof(t_list));
+	if (new == NULL)
+		return (0);
+	new -> content = content;
+	new -> next = NULL;
+	return (new);
+}
+
+/*
+int	main(void)
+{
+	char	*str;
+
+	t_list	*elem;
+	str = (char *)malloc(6*sizeof(char));
+	str = "Hello";
+	elem = ft_lstnew((void *)str);
+	printf("%s\n", (char *)elem->next);
+	free(elem);
+}
+*/

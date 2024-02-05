@@ -1,0 +1,148 @@
+Notes minishell 
+
+Fonctions externes autorisees :
+
+readline, rl_clear_history, rl_on_new_line, rl_replace_line
+rl_redisplay, add_history
+
+printf, malloc, free, write, acess, open, read, close, fork, wait,
+waitpid, exit, unlink, execve, dup, dup2, pipe,
+
+wait3, wait4, signal, sigaction, sigemptyset, sigaddset, kill,
+getcwd, chdir, stat, lstat, fstat, opendir, readdir, closedir,
+strerror, perror, isatty, ttyname, ttyslot, ioctl, getenv, tcsetattr,
+tcgetattr, tgetent, tgetflag, tgetnum, tgetstr, tgoto, tputs
+
+
+
+
+readline : fonction qui lis une ligne du terminal et la retourne.
+rl_clear_history : supprime l'historique de la fonction readline et
+libere la memoire associee aux donnees privee de la fonction readline.
+rl_on_new_line : Indique aux fonctions de mise a jour que nous sommes
+passes sur une nouvelle ligne (vide), generalement apres avoir affiche
+une nouvelle ligne.
+rl_replace_line : Remplace le contenus de 'rl_line_buffer' par du 
+texte. Le 'point' et la 'marque' (mark) sont conserves, si possible.
+Si 'clear_undo' (un parametre de la fonction) est different de zero,
+la liste d'annulation associee a la ligne actuelle est effacee. 
+rl_redisplay : Change le contenus de ce qui est affiche a l'ecran
+pour refleter le contenus actuel de 'rl_line_buffer'.
+add_history : place la chaine de caractere fournis en argument a la
+fin de l'historique. Le champ de données associé (le cas échéant) est 
+défini sur NULL.
+
+Cas de figure lorsqu'il y a un signal 'Ctrl C' avec readline :
+https://stackoverflow.com/questions/71685072/return-readline-to-its-original-state-when-recieving-sigint
+
+wait3, wait4 : Les appels systeme wait3 et wait4 sont similaires a 
+waitpid, mais retournent egalement des informations sur l'utilisation des 
+ressources par le fils dans la structure pointee par 'rusage' (parametre
+de la fonction). 'wait3' attend n'importe quel fils, et 'wait4' peut
+etre utilise pour selectionner un ou des fils specifique(s) a attendre.
+
+signal : la fonction installe le gestionnaire 'handler' pour le signal
+'signum' (parametre de la fonction). 'handler' peut etre 'SIG_IGN',
+'SIG_DFL' ou l'adresse d'une fonction definie par le programmeur
+(un "gestionnaire de signal").
+sigaction : Cette fonction modifie l'action effectuee par un processus
+a la reception d'un signal specifique.
+sigemptyset : Cette fonction vide l'ensemble de signaux fourni par 
+set, tous les signaux etant exclus de cet ensemble.
+sigaddset : ajoutent le signal signum de l'ensemble 'set'.
+kill : Le signal par defaut de kill est TERM. Permet d'arreter un 
+ou plusieurs processus.
+
+getcwd : Cette fonction copie le chemin d'acces absolu du repertoire
+de travail courant dans la chaine pointee par 'buf' (parametre de la
+fonction), qui est de longueur 'size' (parametre de la fonction).
+chdir : Remplace le repertoire de travail courant du processus appelant
+par celui indique dans le chemin path. La fonction chdir() fera en 
+sorte que le répertoire nommé par le chemin pointé par l'argument path 
+devienne le répertoire de travail actuel ; c'est-à-dire que le point 
+de départ de la recherche de chemin pour les noms de chemin ne 
+commençant pas par '/' .
+
+stat, lstat, fstat : Ces fonctions renvoient des renseignements sur 
+le fichier indique, dans le tampon pointe par 'stat'. 'stat' et 'fstatat'
+recuperent des renseignements sur le fichier pointe par 'pathname'.
+'lstat' est identique a 'stat', sauf que dans le cas ou 'pathname'
+est un lien symbolique, auquel cas il renvoie des renseignements sur
+le lien lui-meme plutot que celui du fichier vise. 'fstat' est 
+identique a 'stat', sauf que le fichier dont les renseignements sont
+a recuperer est reference par le descripteur de fichier fd.
+
+opendir : La fonction 'opendir' ouvre un flux repertoire correspondant
+au repertoire 'name', et renvoie un pointeur sur ce flux. Le flux est
+positionne sur la premiere entree du repertoire.
+
+Explication sur les fichiers, repertoires et ouverture de flux de
+repertoire : 
+https://www.developpez.net/forums/d1638610/c-cpp/c/parcours-d-dossier/
+
+readdir : La fonction readdir() renvoie un pointeur sur une structure 
+'dirent' representant l'entree suivante du flux repertoire pointe 
+par 'dir'. Elle renvoie NULL a la fin du repertoire, ou en cas 
+d'erreur.
+closedir : La fonction ferme le flux de repertoire associe a 'dir'.
+Apres cette invocation, le descripteur 'dir' du flux de repertoire 
+n'est plus disponible.
+
+Parcourir des dossiers en C, explication 'errno', 'perror' :
+http://sdz.tdct.org/sdz/arcourir-les-dossiers-avec-dirent-h.html
+
+strerror : La fonction 'strerror' renvoie une chaine decrivant le 
+code d'erreur passe en argument errnum.
+perror : La fonction 'perror' affiche un message sur la sortie
+d'erreur standard, decrivant la derniere erreur rencontree durant
+un appel systeme ou une fonction de bibliotheque. La chaine de 
+caracteres contient generalement le nom de la fonction ou s'est 
+produit l'erreur.
+
+isatty : Verifie si le descripteur de fichier fournis en parametres
+est ouvert et connecte a un terminal. 
+ttyname : La fonction renvoie un pointeur sur le nom du peripherique
+terminal associe au descripteur de fichier fd, ou NULL en cas d'erreur
+(par exemple si le 'fd' n'est pas connecte a un terminal).
+ttyslot : La fonction renvoie la position de l'entree du terminal en
+cours dans un fichier.
+
+ioctl : La fonction modifie le comportement des peripheriques 
+sous-jacents des fichiers speciaux. En particulier, de nombreuses 
+caracteristiques des fichiers speciaux en mode caractere (par exemple
+des terminaux) peuvent etre controlees avec des requetes ioctl.
+
+Explication requetes ioctl :
+https://www.developpez.net/forums/d1013085/c-cpp/c/but-utilite-fonction-ioctl/
+
+getenv : La fonction recherche dans la liste des variables d'environnement
+une variable nommee 'name' (parametre de la fonction), et renvoie un
+pointeur sur la chaine 'value'.
+
+
+Termios : Les fonctions termios etablissent une interface sous forme
+de terminal, permettant de controler les ports de communication 
+asynchrone.
+
+tcsetattr : la fonction fixe les parametres du terminal (a moins que
+le materiel sous-jacent ne le prenne pas en charge) en lisant la
+structure 'termios' pointee par 'termios_p'
+
+tcgetattr : La fonction recupere les parametres associes a l'objet
+reference par 'fd' et les stocke dans la structure 'termios' pointee
+par 'termios_p'. Cette fonction peut etre appele par un processus en
+arriere-plan ; neanmoins, les attributs de terminal peuvent etre
+modifies par la suite par le processus en avant-plan.
+
+Explication structure et fonctions termios :
+http://manpagesfr.free.fr/man/man3/termios.3.html
+
+
+Termcap, Terminfo
+
+Explication : 
+https://zestedesavoir.com/tutoriels/1733/termcap-et-terminfo/
+
+getent, tgetflag, tgetnum, tgetstr, tgoto, tputs : ce sont les 
+fonctions utilisee pour la creation d'interface graphique dans un
+terminal.
