@@ -158,3 +158,13 @@ cd :
 Lorsque j'effectue un cd je dois mettre a jour PWD et OLDPWD, je remplace OLDPWD par
 PWD et je remplace PWD par le nouveau repertoire de travail.
 
+
+Remarque : 
+
+Pour l'instant, lorsque j'appuie sur les fleches ca me fait des 
+symboles avec [[ A ..., parce qu'on ne gere pas encore l'historique
+des commandes et le fait de pouvoir le remonter avec la fleche du 
+haut, et d'ailleurs les flches de gauche et droite ne sont pas 
+censee faire aussi les [[ C quand j'appuie dessus dans la version 
+final.
+
