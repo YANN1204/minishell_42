@@ -136,11 +136,13 @@ produit l'erreur.
 <br/>
 
 **isatty** : Verifie si le descripteur de fichier fournis en parametres
-est ouvert et connecte a un terminal. 
-ttyname : La fonction renvoie un pointeur sur le nom du peripherique
+est ouvert et connecte a un terminal.
+
+**ttyname** : La fonction renvoie un pointeur sur le nom du peripherique
 terminal associe au descripteur de fichier fd, ou NULL en cas d'erreur
 (par exemple si le 'fd' n'est pas connecte a un terminal).
-ttyslot : La fonction renvoie la position de l'entree du terminal en
+
+**ttyslot** : La fonction renvoie la position de l'entree du terminal en
 cours dans un fichier.
 
 <br/>
@@ -189,30 +191,6 @@ getent, tgetflag, tgetnum, tgetstr, tgoto, tputs : ce sont les
 fonctions utilisee pour la creation d'interface graphique dans un
 terminal.
 
-
-<br/>
-<br/>
-<br/>
-
-Fonctions builtins :
---------------------
-
-echo, cd, pwd, export, unset, env, exit.
-
-**cd :** Lorsque j'effectue un cd je dois mettre a jour PWD et OLDPWD, 
-je remplace OLDPWD par PWD et je remplace PWD par le nouveau 
-repertoire de travail.
-
-
-**Remarque :**
-
-Pour l'instant, lorsque j'appuie sur les fleches ca me fait des 
-symboles avec [[ A ..., parce qu'on ne gere pas encore l'historique
-des commandes et le fait de pouvoir le remonter avec la fleche du 
-haut, et d'ailleurs les flches de gauche et droite ne sont pas 
-censee faire aussi les [[ C quand j'appuie dessus dans la version 
-final.
-
 <br/>
 <br/>
 <br/>
@@ -230,30 +208,34 @@ Basic functionality of minishell :
 **Explication minishell :**
 https://m4nnb3ll.medium.com/minishell-building-a-mini-bash-a-42-project-b55a10598218
 
+<br/>
+
+**PARSING :**
+
+- ```;``` in command line should be separate commands
+
+- Handle double quotes ```""``` and single quotes ```''```, which should 
+escape special characters, beside ```$``` for double quotes (Case of multiline does not handle with ```""``` in minishell project).
+
+- Handle environment variables (```$``` followed by a sequence of characters) and ```$?``` should be function as same as bash.
+
+- Handle signals like in bash (```ctrl + C```, ```ctrl + \```, ```ctrl + D```).
+
+<br/>
 
 **EXECUTION :**
 
-- Run simple commands with absolute path (/bin/ls), relative path
-(../bin/ls) and without a path (ls, cat, grep ...).
+- Run simple commands with absolute path ```/bin/ls```, relative path
+```../bin/ls``` and without a path ```ls```, ```cat```, ```grep``` ...
 
 - Working (commands) history (navigating in with up/down arrows). 
 
-- Implement pipes (|), redirections (<, >, >>) and the here-doc (<<)
--> pipex.
+- Implement pipes ```|```, redirections ```<```, ```>```, ```>>``` and the here-doc ```<<```  
+	-> pipex.
 
 - Implement the following built-ins : echo (option -n only), exit,
 env (with no options or arguments), export (with no option), unset
 (with no options), cd, pwd.
-
-
-**PARSING :**
-
-- Handle double quotes ("") and single quotes (''), which should 
-escape special characters, beside $ for double quotes.
-
-- Handle environment variables ($ followed by a sequence of characters).
-
-- Handle signals like in bash (ctrl + C, ctrl + \, ctrl + D).
 
 
 <br/>
@@ -456,11 +438,264 @@ and forking processes.
 
 <br/>
 
+**Lire et ecrire dans un pipe**
+
+Les descripteurs de fichiers d'un pipe s'utilisent de la meme maniere que tout autre descripteur de fichier. Afin d'y mettre des donnees ou de les recuperer, on pourra se servir respectivement des appels systemes *read* et *write* de la bibliotheque <unistd.h>.
+
+Il y a toutefois deux points a garder a l'esprit :
+
+- Si un processus tente de lire depuis un pipe vide, *read* bloquera le processus jusqu'a ce que des donnees soient ecrites dans le pipe.
+- A l'inverse, si un processus tente d'ecrire dans un pipe plein (c'est a dire a la limite de sa capacite), *write* bloquera le processus jusqu'a ce qu'assez de donnees soient lues pour permettre d'y ecrire.
+
+<br/>
+
+**Fermer un pipe**
+
+Les bouts de lecture et d'ecriture d'un pipe se ferment avec l'appel systeme *close* de la bibliotheque <unistd.h> comme tout autre descripteur de fichier. Cependant, il y a quelques particularites a prendre en compte concernant la fermeture des bouts d'un pipe.
+
+Lorsque tous les descripteurs de fichier qui font reference au bout d'ecriture d'un pipe sont fermes, un processus qui tente de lire depuis son bout de lecture verra le caractere de fin de fichier (EOF ou "end of file") et la fonction *read* renverra 0.
+
+A l'inverse, si tous les descripteurs de fichier qui font reference au bout de lecture d'un pipe sont fermes et qu'un processus tente d'y ecrire, *write* lancera le signal SIGPIPE ou, si le signal est ignore, echouera avec l'erreur EPIPE dans *errno*.
+
+Pour s'assurer que les processus recoivent correctement les indications de terminaison (EOF, SIGPIPE/EPIPE), il est primordial de fermer tous les descripteurs dupliques inutilises.
+
+Exemple : Si l'on oublie de fermer les bouts de lecture inutilises du pipe  dans le processus fils, celui-ci reste indefiniment en suspens, puisque read n'a pas recu le caractere de fin de fichier (EOF), meme si le pere a ferme son descripteur pour le bout d'ecriture... Simplement, etant donne que le processus fils n'a pas ferme le sien avant la lecture. D'ou l'importance de s'assurer d'avoir bien ferme les bouts inutilises de nos pipes dans chaque processus.
+
+<br/>
+
+**Creer une pipeline comme un shell**
+
+Ce qu'il faut faire si l'on souhaite construire une pipeline, c'est creer un tube (une paire de descripteurs de fichiers) pour chaque processus fils, moins 1. Comme ca, le premier peut ecrire dans la sortie de son propre tube, le deuxieme lire depuis le tube du premier et ecrire dans son propre tube et ainsi de suite.
+
+<br/>
+
+**Astuces pour deboguer un programme avec des processus fils**
+
+<br/>
+
+Plus de details sur les fork et les processus fils :
+https://www.codequoi.com/creer-et-tuer-des-processus-fils-en-c/
+
+Tout bon programme ne doit avoir aucune fuite de memoire. Dans le cas d'un programme qui cree des processus fils, aucun de ces fils ne doivent avoir de fuites de memoire non plus. On doit donc s'assurer de liberer toute memoire allouee a la terminaison de chaque processus. Si l'on tue nos processus fils avec un signal, on doit veiller a quel signal utiliser : SIGTERM, SIGINT et SIGKILL n'ont pas tous les memes implications en termes de fuites de memoire !
+
+Deboguer un programme qui cree des processus fils peut s'averer assez accablant. En effet, Valgrind affiche souvent un torrent de messages d'erreurs, provenant non seulement du processus pere mais aussi de chacun des fils ! Heuresement, Valgrind nous offre une option pour faire taire les erreurs dans les fils : ```--child-silent-after-fork=yes```. Une fois qu'on a resolu les erreurs du processus pere, on peut enlever cette option pour examiner les erreurs propres aux fils.
+
+<br/>
+<br/>
+<br/>
+
+Fonctions builtins :
+--------------------
+
 The **built-ins** are a set of useful functions that are needed in the Minishell, they differ in complexity, from the easy ones like ```echo``` to
 complex ones.
+
+Les fonctions ```built-ins``` n'ont pas besoin d'utiliser ```execve``` car elles sont suffisamment simple pour etre directement implementee. On a donc pas besoin d'utiliser de dupliquer le processus avec un fork pour les commandes ```built-ins```.
+
+echo, cd, pwd, export, unset, env, exit.
+
+**echo :**
+
+doit afficher le message donner en deuxieme argument suivi d'un '\n', mais si le flag '-n' est present on ne renvoie pas de '\n', mais on peut mettre plusieus fois le flag '-n' avec un nombre de n non limite et cela doit quand meme fonction et renvoyer le message de l'argument avec un '\n', mais si dans l'un des flag '-n' il y a un caractere qui n'est pas un 'n' alors la fonction considere que ce flag et tout ce qui suit font partit de l'argument a afficher et renvoie cette chaine avec un '\n' si il y a un
+flag '-n' devant.
+
+**cd :** 
+
+- Lorsque j'effectue un cd je dois mettre a jour PWD et OLDPWD, 
+je remplace OLDPWD par PWD et je remplace PWD par le nouveau 
+repertoire de travail.
+- Il faut egalement que je gere le ```cd ..``` et l'histoire du dossier supprime et lorsque l'on fait ```cd ..``` a l'interieur d'un dossier qui se trouve dans le dossier supprimee et que les variables d'environnements PWD et OLDPWD ont ete *unset*.
+
+
+
+
+<br/>
+<br/>
+<br/>
+
+Historique de commande :
+------------------------
+
+Pour l'instant, lorsque j'appuie sur les fleches ca me fait des 
+symboles avec [[ A ..., parce qu'on ne gere pas encore l'historique
+des commandes et le fait de pouvoir le remonter avec la fleche du 
+haut, et d'ailleurs les flches de gauche et droite ne sont pas 
+censee faire aussi les [[ C quand j'appuie dessus dans la version 
+final.
+
+<br/>
+<br/>
+<br/>
+
+Signal
+------
 
 <br/>
 
 After finishing the execution, we can implement the signals (```ctrl + C```, ```ctrl + \```, ```ctrl + D```).
 
 For ```ctrl + C```, ```ctrl + \```, we can catch ```SIGINT``` and ```SIGQUIT``` respectively, but in the case of ```ctrl + D``` we have to check the ```EOF``` or the end of string (i.e. ```NULL``` character).
+
+Article explicatif sur les signaux : 
+https://www.codequoi.com/envoyer-et-intercepter-un-signal-en-c/
+
+<br/>
+
+**Definition :** Un signal est un message de notification standardise utilise dans les systemes d'exploitation compatibles POSIX ou de type Unix. On l'envoie a un programme en cours d'execution de facon asynchrone, pour le signaler de l'apparition d'un evenement. Le systeme interrompt alors l'execution normale du processus en question pour declencher une reaction specifique comme, entres autres, la terminaison du processus. On peut donc dire qu'un signal est une forme limitee de communication inter-processus.
+
+<br/>
+
+**L'envoi d'un signal** : Le noyau du systeme d'exploitation peut envoyer un signal pour l'une des deux raisons suivantes :
+- Il a detecte un evenement systeme comme une erreur de division par zero ou la terminaison d'un processus fils.
+- Un processus lui en a fait la demande avec l'appel systeme ```kill```, sachant qu'un processus peut s'envoyer lui-meme un signal.
+
+"L'envoi" d'un signal est en realite plutot une livraison : le systeme met a jour le contexte du processus destinataire du signal. En effet, pour chaque processus, le systeme maintient deux vecteurs de bits : ```pending``` pour surveiller les signaux en attente, et ```blocked``` pour suivre les signaux bloques. Lorsqu'il envoie un signal, le systeme ne fait que mettre le bit associe au signal a 1 dans le vecteur ```pending``` du processus destinataire.
+
+Il est important de noter qu'il ne peut pas y avoir plusieurs signaux du meme type en attente. Dans l'exemple de l'article, le processus a deja le signal ```17```, ```SIGCHLD```, en attente. Le systeme ne peut donc pas lui envoyer d'autres signaux ```SIGCHLD``` jusqu'a ce que ce signal soit receptionne. Il n'y a pas non plus de file d'attente pour les signaux en attente : tant que ce signal n'est pas receptionne, tous les signaux du meme type qui suivent sont perdus.
+
+**La reception du signal** : Le systeme d'exploitation donne l'impression de pouvoir executer une multitude de programmes a la fois, mais ce n'est qu'une illusion. En realite, il passe constamment d'un processus a l'autre a une vitesse fulgurante. C'est ce qu'on appelle une **commutation de contexte** (*context switch* en anglais).
+
+Lorsque le noyau du systeme reprend le fil d'execution du processus par exemple apres une commutation ou un appel systeme, il verifie l'ensemble de signaux non-bloques en attente pour ce processus. C'est a dire qu'il fait l'operation *bitwise* ```pending & ~blocked```. Si cet ensemble est vide, comme c'est generalement le cas, le noyau passe a la prochaine instruction du programme. Par contre si l'ensemble n'est pas vide, le noyau choisit un signal (generalement le plus petit) et force la force le processus a y reagir avec une action. C'est ce moment-la qu'on appelle la reception du signal. Selon le signal, le processus pourra soit :
+- ignorer le signal,
+- mettre fin a son execution,
+- intercepter le signal en executant sa propre routine de gestion pour le signal recu.
+
+Une fois le signal recu et une de ces actions realisees, le noyau remet le bit qui lui correspond a 0 dans le vecteur ```pending``` et passe a la prochaine instruction du programme s'il n'a pas termine.
+
+<br/>
+
+**Les signaux POSIX et leurs actions par defaut** :
+
+<br/>
+
+Par defaut, lorsqu'un processus recoit un signal, il effectuera l'une de ces quatre actions :
+- Terminer : le processus se termine immediatement,
+- Core : le processus se termine immediatement et fait un core dump (un fichier contenant une copie de sa memoire vive et de ses registres qui peut etre analysee par la suite),
+- Ignorer : le signal est simplement ignore et le programme poursuit son execution normale,
+- Stop : l'execution du processus est suspendu jusqu'a recevoir le signal SIGCONT.
+
+Il est possible de changer l'action par defaut associee a un signal. Toutefois, il est impossible d'intercepter, d'ignorer, de bloquer ou de changer l'action des signaux SIGKILL et SIGSTOP.
+
+**Liste des signaux Linux** :
+
+- 1 - SIGHUP (Terminer) -> Rupture detectee sur le terminal controleur ou mort du processus parent
+- 2 - SIGINT (Terminer) -> Interruption du clavier (ctrl-c)
+- 3 - SIGQUIT (Terminer) -> Fin du processus, parfois du clavier (ctrl-\)
+- 4 - SIGILL (Terminer) -> Instruction illegale
+- 5 SIGTRAP (Core) -> Point d'arret rencontre
+- 6 - SIGABRT (Core) -> Arret anormal du processus (fonction *abort*)
+- 7 - SIGBUS (Terminer) -> Erreur de bus
+- 8 - SIGFPE (Core) -> Erreur mathematique virgule flottante
+- 9 - SIGKILL (Terminer) -> Fin immediate du processus
+- 10 - SIGUSR1 (Terminer) -> Signal utilisateur 1
+- 11 SIGSEGV (Core) -> Reference memoire non valide (segfault)
+- 12 - SIGUSR2 - (Terminer) -> Reference memoire non valide (segfault)
+- 13 - SIGPIPE (Terminer) -> Ecriture dans un tupe (pipe) sans lecteur
+- 14 - SIGALRM (Terminer) -> Signal du temporisateur definit par *alarm*
+- 15 - SIGTERM (Terminer) -> Signal de fin
+- 16 - SIGSTKFLT (Terminer) -> Signal de fin
+- 17 - SIGCHLD (Ignorer) -> Processus fils arrete ou termine
+- 18 - SIGCONT (Ignorer) -> Continuer processus si arrete
+- 19 - SIGSTOP (Stop) -> Suspend le processus
+- 20 - SIGSTP (Stop) -> Suspend le processus depuis le terminal (ctrl-z)
+- 21 - SIGTTIN (Stop) -> Lecture sur terminal en arriere plan
+- 22 - SIGTTOU (Stop) -> Ecriture sur terminal en arriere plan
+- 23 - SIGURG (Ignorer) -> Condition urgente sur socket
+- 24 - SIGXCPU (Terminer) -> Limite de temps CPU depassee
+- 25 - SIGXFSZ (Terminer) -> Limite de taille de fichier depassee
+- 26 - SIGVTALRM (Terminer) -> Temporisateur virtuel expire
+- 27 - SIGPROF (Terminer) -> Temporisateur virtuel expire
+- 28 - SIGWINCH (Ignorer) -> Fenetre redimensionnee
+- 29 - SIGIO (Terminer) -> I/O a nouveau possible
+- 30 - SIGPWR (Terminer) -> Chute d'alimentation
+- 31 - SIGSYS (Terminer) -> Mauvais appel systeme
+
+<br/>
+
+**Envoyer des signaux**
+
+<br/>
+
+Dans les systemes de type Unix, il y a plusieurs mecanismes pour envoyer des signaux aux processus. Tous ces mechanismes font appel a la notion de **groupes de processus**.
+
+**Envoyer un signal depuis le clavier**
+
+Depuis le shell dans notre terminal, il y a trois raccourcis de clavier qui nous permettent d'interrompre tous les processus en avant-plan en cours d'execution :
+- **ctrl-c** : envoie SIGINT pour les interrompre,
+- ctrl-\ : envoie SIGQUIT pour les tuer,
+- **ctrl-z** : envoie SIGTSTP pour les suspendre.
+
+<br/>
+
+**Envoyer des signaux avec la commande kill**
+
+Pour envoyer un autre type de signal depuis notre terminal, il faudra utiliser la commande **kill**. Et ce, meme si le signal en question n'a rien a voir avec la terminaison du processus ! Certains shells possedent leur propre commande kill interne. Ici, nous parlerons uniquement du programme qui se situe dans ```/bin/kill```.
+
+```int kill(pid_t pid, int sig);```
+
+Cet appel systeme fonctionne de la meme maniere que la commande ```/bin/kill``` decrite ci-dessus. Ses parametres sont :
+- **pid** : l'identifiant du processus ou du groupe de processus auquel envoyer le signal. On peut ici specifier :
+	- un entier positif : le PID d'un processus,
+	- un entier negatif : le PGID d'un groupe de processus,
+	- 0 : tous les processus dans le groupe du processus appelant,
+	- -1 : tous les processus dans le systeme pour lequel le processus appelant a la permission d'envoyer un signal (sauf le processus 1, init)
+- **sig** : le signal a envoyer au processus.
+
+Voir man kill : http://manpagesfr.free.fr/man/man2/kill.2.html
+
+<br/>
+
+**Intercepter un signal avec sigaction**
+
+La bibliotheque **<signal.h>** propose deux fonctions pour intercepter un signal : *signal* et *sigaction*. La premiere n'est pas recommandee par souci de portabilite ; nous etudierons donc ici **sigaction** dont voici le prototype :
+
+```int sigaction(int signum, const struct sigaction *restrict act, struct sigaction *restrict oldact);```
+
+Ce prototype est quelque peu intimidant, alors expliquons ses parametres assez obscurs :
+
+- **signum** : le signal pour lequel on souhaite changer l'action.
+- **act** : un pointeur vers une structure de type *sigaction* qui va permettre entres autres d'indiquer une routine de gestion de signaux.
+- **oldact** : un pointeur vers une autre structure de type *sigaction* dans lequel on souhaiterait sauvegarder l'ancien comportement en reaction au signal. Si l'on a pas particulierement besoin de sauvegarder l'ancienne reaction, on peut simplement mettre NULL ici.
+
+<br/>
+
+**Indiquer une routine de gestion de signaux dans la structure sigaction** :
+
+Voir man sigaction : https://man7.org/linux/man-pages/man2/sigaction.2.html
+
+On l'aura compris, "sigaction" c'est le nom de la fonction mais aussi celui du type de structure dont la fonction a besoin pour effectuer sa tache. La variable qui va surtout nous interesser, c'est **sa_handler**. C'est elle qui specifie l'action qui doit etre associee au signal. On peut lui indiquer une de ces trois choses :
+
+- SIG_DFL pour l'action par defaut,
+- SIG_IGN pour ignorer le signal,
+- un pointeur vers une routine de gestion de signal, c'est a dire une fonction qui se declenchera en reponse a ce signal, qui doit avoir pour prototype **void nom_de_fonction(int signal);**. On remarquera que cette fonction prend en parametres le signal, ce qui veut dire qu'on peut utiliser cette meme routine pour gerer plusieurs signaux differents !
+
+Il faut aussi garder a l'esprit que l'une des autres variables de la structure (sa_sigaction) est incompatible avec **sa_handler** : il ne faut pas les renseigner toutes deux. Il est donc prudent de s'assurer que tous les bits de la structure sont mis a 0 avec une fonction comme *bzero* ou *memset* avant de la remplir.
+
+<br/>
+
+**Securiser une routine de gestion de signaux**
+
+Les signaux sont asynchrones, c'est a dire qu'ils peuvent intervenir a n'importe quel moment dans l'execution de notre programme. Lorsqu'on les intercepte avec une routine de gestion, on ne sait pas ou le programme en est dans son execution. Si la routine accede a une variable que le programme est en train d'utiliser lors de son interruption, les resultats pourraient etre desastreux. De plus, il ne faut pas oublier qu'une routine de gestion de signal peut elle-meme etre interrompue par une autre routine si le processus recoit un autre signal en meme temps !
+
+Les routines de gestion de signaux sont une forme de programmation concurrente.
+
+Or, comme nous l'avons vu dans un article precedent sur les treads et les mutex, la programmation concurrente peut entrainer d'imprevisibles erreurs qui sont extremement difficiles a deboguer. Pour eviter ce genre d'erreurs, nous devons prendre beaucoup de precautions lors de l'elaboration de nos routines de gestion de signaux pour qu'ils soient aussi surs que possible. Dans cette optique, voici quelques recommendations a garder a l'esprit.
+
+1. Garder les routines de gestion aussi simples et courtes que possible
+2. Uniquement utiliser des fonctions sures pour signaux asynchrones dans les routines (le man de signal maintient une liste des fonctions sures qui peuvent etre utilisees dans une routine de gestion de signal).
+3. Sauvegarder errno et la restaurer
+4. Bloquer temporairement tous les signaux lors d'un acces a une donnee partagee entre le programme principal et la routine de gestion
+5. Declarer une variable globale partagee avec volatile
+6. Declarer un drapeau de type sig_atomic_t
+
+<br/>
+
+**Bloquer un signal en C**
+
+Pour bloquer un signal, on doit tout d'abord l'ajouter a un ensemble de signaux a bloquer. Puis il faudra specifier cet ensemble soit dans la variable *sa_mask* de la structure *sigaction* qu'on fournita a la fonction du meme nom, soit dans la fonction dedieem *sigprocmask*. C'est toujours la bibliotheque **<signal.h>** qui nous fournit les types de variables et les fonctions qu'il nous faut.
+
+Voir l'article pour plus de detail :
+https://www.codequoi.com/envoyer-et-intercepter-un-signal-en-c/
+
+
+
