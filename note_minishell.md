@@ -438,6 +438,47 @@ and forking processes.
 
 <br/>
 
+**Introduction theorique : La representation des fichiers ouverts sur le systeme**
+
+Lien de l'article :
+https://www.codequoi.com/manipuler-un-fichier-a-laide-de-son-descripteur-en-c/
+
+Pour representer les fichiers ouverts, le systeme utilise trois structures de donnees :
+
+- Une table de descripteurs de fichier **par processus**. Chaque processus possede sa propre table qui contient une suite d'indexes, chacun faisant reference a une entree dans la table des fichiers ouverts.
+- Une table des fichiers ouverts qui est **commune a tous les processus**. Chaque entree de ce tableau contient, entres autres,le mode d'acces, la tete de lecture du fichier, et un pointeur vers l'entree correspondante dans la table inode. Cette table garde aussi un compte du nombre de references a ce fichier dans toutes les tables de descripteurs de tous les processus. Lorsqu'un processus ferme le fichier, ce compte est decremente et s'il arrive a 0, l'entree est supprimee de la table des fichiers.
+- Une table inode (index node) qui est aussi commune a tous les processus. Chaque entree dans la table inode decrit en detail le fichier en question : le chemin ou il se trouve sur le disque dur, sa taille, ses permissions...
+
+**Particularite de la fonction read**
+
+La fonction read a bien l'air d'avoir un marque-pages integre ! A chaque appel, read reprend la lecture la ou elle s'est arretee la derniere fois. En realite, la fonction read ne retient pas elle-meme sa derniere position dans le fichier : elle incremente la tete de lecture du descripteur de fichier.
+
+**La tete de lecture d'un descripteur de fichier**
+
+Comme on l'aura peut-etre remarque dans le schema au debut de cet article, les references dans la table commune des fichiers ouverts contient une tete de lecture. Celle-ci controle le decalage entre le debut du fichier et la position actuelle a l'interieur du fichier. Et c'est elle que read incremente a la fin de sa lecture. La tete de lecture est simplement appelee "**offset**" en anglais.
+
+Donc quand on ouvre un fichier, la tete de lecture est typique;ent a 0, ce qui veut dire qu'on se trouve en tout debut de fichier. Quand on lit, disons, 12 caracteres avec read, la tete de lecture est mise a jour a 12. La prochaine fois qu'on accede au descripteur de fichier pour y lire ou meme y ecrire, on commencera depuis la position du debut du fichier decale de la valeur de la tete de lecture, ici donc, au 13e caractere.
+
+Notons aussi que malgre son nom, la tete de lecture est aussi la tete d'ecriture : la fonction *write* sera aussi affectee par tout les deplacement de la tete dans le fichier.
+
+**Retrouver le debut du fichier avec un nouveau descripteur**
+
+La solution la plus simple est sans doute d'ouvrir a nouveau le meme fichier avec open. Cela cree une nouvelle entree dans le tableau des fichiers ouverts du systeme sans aucun decalage de tete de lecture.
+
+**Lseek : repositionner la tete de lecture**
+
+Une autre option pour repositionner la tete de lecture a l'endroit qu'on veut, c'est la fonction **lseek** de la bibliotheque <unistd.h>. Elle nous permet d'exercer un controle plus precis sur la position de la tete de lecture.
+
+Il faut faire attention avec *lseek* car cette fonction nous permet de mettre notre tete de lecture au-dela de la fin du fichier ! Si l'on ecrit apres la fin du fichier, sa taille ne changera pas et cela pourrait creer des "trous", des zones remplies de '\0' au milieu du fichier.
+
+**L'interchangeabilite des descripteurs dupliques**
+
+Apres un appel reussi a dup ou dup2, l'ancien et le nouveau descripteurs sont interchangeables : ils font reference au meme fichier dans la table des fichiers ouverts et partagent donc tous ses attributs. Par exe;ple, si on lit avec *read* les premiers caracteres de l'un des descripteurs, la tete de lecture va etre modifiee. Et ce, pour les deux descripteurs de fichier, pas seulement celui avec lequel on a lu.
+
+Pourtant, on a vu precedemment que si l'on rouvrait le meme fichier une deuxieme fois, les deux descripteurs ne se partageaient pas la tete de lecture de cette facon. Alors pourquoi cela fonctionne-t-il differemment pour les descripteurs dupliques ?
+
+Un descripteur de fichier ouvert possede sa propre entree dans le tableau des fichiers ouverts, avec sa propre tete de lecture. Par contre, un descripteur de fichier duplique pointe vers la meme entree dans la table des fichiers ouverts que le descripteur de fichier original, ce qui implique qu'il partage la tete de lecture de son clone.
+
 **Lire et ecrire dans un pipe**
 
 Les descripteurs de fichiers d'un pipe s'utilisent de la meme maniere que tout autre descripteur de fichier. Afin d'y mettre des donnees ou de les recuperer, on pourra se servir respectivement des appels systemes *read* et *write* de la bibliotheque <unistd.h>.
@@ -697,5 +738,27 @@ Pour bloquer un signal, on doit tout d'abord l'ajouter a un ensemble de signaux 
 Voir l'article pour plus de detail :
 https://www.codequoi.com/envoyer-et-intercepter-un-signal-en-c/
 
+<br/>
+<br/>
+<br/>
 
+Errno et la gestion d'erreur en C
+---------------------------------
 
+Lien de l'article : 
+https://www.codequoi.com/errno-et-la-gestion-derreur-en-c/
+
+<br/>
+
+**Qu'est-ce qu'errno ?**
+
+Errno ("error number" ou "code erreur" en francais) est une variable de type entier stocke dans la bibliotheque <errno.h>. Quand un appel systeme echoue, il y place systematiquement son code d'erreur pour expliquer les conditions de son echec. Beaucoup d'autres fonctions des bibliotheques standard font de meme. Le code erreur dans cette variable peut alors etre interprete pour comprendre ce qu'il s'est mal passe.
+
+Au debut d'un programme, errno commence toujours par avoir une valeur de 0, ce qui indique le succes. Par contre, une fois que cette variable est modifiee pour contenir un code d'erreur, elle ne retournera jamais a 0. En effet, aucun appel systeme ou fonction standard ne stocke 0 dans errno. C'est pourquoi sa valeur n'est significative qu'immediatement apres l'echec d'un appel systeme ou d'une fonction standard. C'est a dire apres avoir recu generalement -1 ou NULL en retour de fonction.
+
+Pourtant, certaines fonctions peuvent renvoyer -1 ou NULL en cas de succes ou d'erreur. C'est le cas des fonctions *readdir* et *getpriority*. Il est dans ces cas important de remettre errno a 0 avant l'appel de fonction pour pouvoir verifier si une erreur s'est produite pendant l'appel. Pour lui assigner une valeur, rien de plus simple :
+```errno = 0;```
+
+**Afficher l'erreur d'errno**
+
+Il y a deux fonctions qui nous permettent de traduire le code d'erreur numerique contenu dans errno en sa phrase descriptive correspondante pour l'afficher dans notre terminal : *perror* et *strerror*.
