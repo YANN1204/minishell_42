@@ -6,7 +6,7 @@
 /*   By: yrio <yrio@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/05 12:37:47 by yrio              #+#    #+#             */
-/*   Updated: 2024/02/05 17:50:30 by yrio             ###   ########.fr       */
+/*   Updated: 2024/02/12 17:46:08 by yrio             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,11 @@ void	ls_cmd(void)
 	fichierLU = readdir(rep);
 	while (fichierLU)
 	{
-		printf("%s\n", fichierLU->d_name);
+		ft_putstr_fd(fichierLU->d_name, 1);
+		ft_putchar(' ');
 		fichierLU = readdir(rep);
 	}
+	ft_putchar('\n');
 	if (closedir(rep) == -1)
 		exit(-1);
 }
@@ -59,4 +61,15 @@ char	**get_paths(char **env)
 		exit(0);
 	free(path);
 	return (path_split);
+}
+
+char	**free_split(char **char_tab)
+{
+	int	tmp;
+
+	tmp = 0;
+	while (char_tab[tmp])
+		free(char_tab[tmp++]);
+	free(char_tab);
+	return (NULL);
 }

@@ -83,7 +83,10 @@ ou plusieurs processus.
 **getcwd** : Cette fonction copie le chemin d'acces absolu du repertoire
 de travail courant dans la chaine pointee par 'buf' (parametre de la
 fonction), qui est de longueur 'size' (parametre de la fonction).
-chdir : Remplace le repertoire de travail courant du processus appelant
+
+<br/>
+
+**chdir :** Remplace le repertoire de travail courant du processus appelant
 par celui indique dans le chemin path. La fonction chdir() fera en 
 sorte que le répertoire nommé par le chemin pointé par l'argument path 
 devienne le répertoire de travail actuel ; c'est-à-dire que le point 
@@ -93,7 +96,7 @@ commençant pas par '/' .
 <br/>
 
 **stat, lstat, fstat** : Ces fonctions renvoient des renseignements sur 
-le fichier indique, dans le tampon pointe par 'stat'. 'stat' et 'fstatat'
+le fichier indique, dans le tampon pointe par 'stat'. 'stat' et 'fstat'
 recuperent des renseignements sur le fichier pointe par 'pathname'.
 'lstat' est identique a 'stat', sauf que dans le cas ou 'pathname'
 est un lien symbolique, auquel cas il renvoie des renseignements sur
@@ -438,6 +441,21 @@ and forking processes.
 
 <br/>
 
+Etapes execution :
+------------------
+
+Notes explicatives sur une version de minishell :
+https://github.com/LucieLeBriquer/minishell/tree/master
+
+Lorsque l'on est sur une commande/feuille, on regarde le premier mot apres
+expansion :
+- Si c'est une commande built-in -> go to la fonction dediee
+- Si on commence par ```./``` on essaye de lancer l'executable ```./name``` (fork needed)
+- S'il y a un ```=``` on cree une variable d'environnement
+- Sinon, on essaye de lancer l'executable **$(PATH)/name** (fork needed)
+
+<br/>
+
 **Introduction theorique : La representation des fichiers ouverts sur le systeme**
 
 Lien de l'article :
@@ -531,13 +549,11 @@ Fonctions builtins :
 The **built-ins** are a set of useful functions that are needed in the Minishell, they differ in complexity, from the easy ones like ```echo``` to
 complex ones.
 
-Les fonctions ```built-ins``` n'ont pas besoin d'utiliser ```execve``` car elles sont suffisamment simple pour etre directement implementee. On a donc pas besoin d'utiliser de dupliquer le processus avec un fork pour les commandes ```built-ins```.
-
-echo, cd, pwd, export, unset, env, exit.
+Les fonctions ```built-ins``` n'ont pas besoin d'utiliser ```execve``` car elles sont suffisamment simple pour etre directement implementee. On a donc pas besoin d'utiliser de dupliquer les processus.
 
 **echo :**
 
-doit afficher le message donner en deuxieme argument suivi d'un '\n', mais si le flag '-n' est present on ne renvoie pas de '\n', mais on peut mettre plusieus fois le flag '-n' avec un nombre de n non limite et cela doit quand meme fonction et renvoyer le message de l'argument avec un '\n', mais si dans l'un des flag '-n' il y a un caractere qui n'est pas un 'n' alors la fonction considere que ce flag et tout ce qui suit font partit de l'argument a afficher et renvoie cette chaine avec un '\n' si il y a un
+La fonction echo avec l'option '-n' ne renvoie pas de '\n', mais on peut mettre plusieus fois le flag '-n' avec un nombre de n non limite et cela doit quand meme fonction et renvoyer le message de l'argument avec un '\n', mais si dans l'un des flag '-n' il y a un caractere qui n'est pas un 'n' alors la fonction considere que ce flag et tout ce qui suit font partit de l'argument a afficher et renvoie cette chaine avec un '\n' si il y a un
 flag '-n' devant.
 
 **cd :** 
@@ -546,8 +562,16 @@ flag '-n' devant.
 je remplace OLDPWD par PWD et je remplace PWD par le nouveau 
 repertoire de travail.
 - Il faut egalement que je gere le ```cd ..``` et l'histoire du dossier supprime et lorsque l'on fait ```cd ..``` a l'interieur d'un dossier qui se trouve dans le dossier supprimee et que les variables d'environnements PWD et OLDPWD ont ete *unset*.
+- Il faut que je free le malloc 'current_pwd' de ma fonction 'update_pwds' a
+un moment donnee, et il faudrait que je trouve le bon endroit ou le faire (fin
+de la fonction ou plutot a la fin du programme avec un free d'une structure
+probablemet).
 
+**exit :**
 
+- Attention au parsing de ```exit``` : ```a``` ou ```a 1``` ou ```3.14``` : ```exit(2)``` + erreur ```numeric argument required```
+- ```1 a``` ou ```1 2``` : pas d'exit + $? = 1 + erreur ```too may arguments```
+- Si juste un argument numerique -> le convertir en % 256 et exit avec cette valeur
 
 
 <br/>

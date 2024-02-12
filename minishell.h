@@ -6,7 +6,7 @@
 /*   By: yrio <yrio@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/05 08:01:00 by yrio              #+#    #+#             */
-/*   Updated: 2024/02/05 17:50:17 by yrio             ###   ########.fr       */
+/*   Updated: 2024/02/12 17:47:23 by yrio             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ int		ft_strncmp(const char *s1, const char *s2, unsigned int n);
 
 void	ls_cmd(void);
 char	**get_paths(char **env);
+char	**free_split(char **char_tab);
 
 void	cd_builtins(char **argv, char **env);
 void	env_builtins(char **env);
