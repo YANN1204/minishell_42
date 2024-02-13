@@ -6,7 +6,7 @@
 /*   By: yrio <yrio@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/05 08:00:47 by yrio              #+#    #+#             */
-/*   Updated: 2024/02/13 11:30:04 by yrio             ###   ########.fr       */
+/*   Updated: 2024/02/13 14:00:32 by yrio             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,30 +15,35 @@
 int	main(int argc, char **argv, char **env)
 {
 	t_minishell	minishell;
+	char		**args_split;
 	char		*line;
 
 	(void)argc;
+	(void)argv;
 	malloc_env(&minishell, env);
 	write(0, "minishell$ ", 11);
 	line = get_next_line(0);
 	while (line)
 	{	
-		if (!ft_strncmp(line, "cd libft", 8) && \
-			ft_strlen(line) - 1 == ft_strlen("cd libft"))
-			cd_builtins(argv, &minishell);
-		if (!ft_strncmp(line, "env", 3) && \
-			ft_strlen(line) - 1 == ft_strlen("env"))
-			env_builtins(&minishell);
-		if (!ft_strncmp(line, "ls", 2) && \
-			ft_strlen(line) - 1 == ft_strlen("ls"))
+		args_split = ft_split(line, ' ');
+		if (!ft_strncmp(args_split[0], "cd", 2) && \
+			ft_strlen(args_split[0]) == ft_strlen("cd"))
+			ft_cd(args_split, &minishell);
+		if (!ft_strncmp(args_split[0], "env", 3) && \
+			ft_strlen(args_split[0]) - 1 == ft_strlen("env"))
+			ft_env(&minishell);
+		if (!ft_strncmp(args_split[0], "ls", 2) && \
+			ft_strlen(args_split[0]) - 1 == ft_strlen("ls"))
 			ls_cmd();
-		if (!ft_strncmp(line, "exit", 4) && \
-			ft_strlen(line) - 1 == ft_strlen("exit"))
+		if (!ft_strncmp(args_split[0], "exit", 4) && \
+			ft_strlen(args_split[0]) - 1 == ft_strlen("exit"))
 		{
 			free(line);
+			free_split(args_split);
 			break ;
 		}
 		free(line);
+		free_split(args_split);
 		write(0, "minishell$ ", 11);
 		line = get_next_line(0);
 	}

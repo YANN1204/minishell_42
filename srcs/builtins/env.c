@@ -6,13 +6,13 @@
 /*   By: yrio <yrio@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/13 07:26:19 by yrio              #+#    #+#             */
-/*   Updated: 2024/02/13 11:35:40 by yrio             ###   ########.fr       */
+/*   Updated: 2024/02/13 13:14:40 by yrio             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "../../minishell.h"
 
-void	env_builtins(t_minishell *minishell)
+void	ft_env(t_minishell *minishell)
 {
 	env_list	*list_envs;
 	

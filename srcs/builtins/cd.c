@@ -6,7 +6,7 @@
 /*   By: yrio <yrio@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/13 07:25:33 by yrio              #+#    #+#             */
-/*   Updated: 2024/02/13 11:57:56 by yrio             ###   ########.fr       */
+/*   Updated: 2024/02/13 13:38:52 by yrio             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	update_pwds(char *dir_path, char *new_dir_path, env_list *list_envs)
 	}
 }
 
-void	cd_builtins(char **argv, t_minishell *minishell)
+void	ft_cd(char **args_split, t_minishell *minishell)
 {
 	DIR* rep;
 	struct dirent* fichierLU;
@@ -47,7 +47,6 @@ void	cd_builtins(char **argv, t_minishell *minishell)
 	char	*dir_path_tmp;
 	char	*new_dir_path;
 
-	(void)argv;
 	dir_path = NULL;
 	dir_path = getcwd(dir_path, PATH_MAX);
 	rep = NULL;
@@ -56,11 +55,13 @@ void	cd_builtins(char **argv, t_minishell *minishell)
 	if (!rep)
 		exit(1);
 	fichierLU = readdir(rep);
-	while (!ft_strncmp(fichierLU->d_name, "libft", 5) && fichierLU)
+	args_split[1][ft_strlen(args_split[1]) - 1] = '\0';
+	while (!ft_strncmp(fichierLU->d_name, args_split[1], \
+		ft_strlen(args_split[1])) && fichierLU)
 		fichierLU = readdir(rep);
 	dir_path_tmp = ft_strjoin(dir_path, "/");
-	new_dir_path = ft_strjoin(dir_path_tmp, "libft");
-	chdir("libft");
+	new_dir_path = ft_strjoin(dir_path_tmp, args_split[1]);
+	chdir(args_split[1]);
 	update_pwds(dir_path, new_dir_path, minishell->lst_envs);
 	free(dir_path_tmp);
 	free(rep);
