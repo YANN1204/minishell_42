@@ -5,8 +5,28 @@ Notes Minishell
 <br/>
 <br/>
 
-Liste Fonctions externes autorisees :
--------------------------------------
+Sommaire :
+=========
+
+<br/>
+
+1. [Liste_Fonctions_externes_autorisees](#partie_1)
+2. [Documentation_fonction_externes_autorisees](#partie_2)
+3. [Fonctionnalite_basique_minishell](#partie_3)
+4. [BASH_PARSING_technique->PRECEDENCE_CLIMBING](#partie_4)
+5. [Application_of_PRECEDENCE_CLIMBING_on_bash_arguments](#partie_5)
+6. [Etapes_execution](#partie_6)
+7. [Fonctions_builtins](#partie_7)
+8. [Historique_de_commandes](#partie_8)
+9. [Signaux](#partie_9)
+10. [Errno_et_la_gestion_d_erreur](#partie_10)
+
+<br/>
+<br/>
+<br/>
+
+Liste_Fonctions_externes_autorisees <a id="partie_1"></a>
+---------------------------------------------------------
 
 <br/>
 
@@ -25,8 +45,8 @@ tcgetattr, tgetent, tgetflag, tgetnum, tgetstr, tgoto, tputs
 <br/>
 <br/>
 
-Documentation fonction externes autorisees :
---------------------------------------------
+Documentation_fonction_externes_autorisees <a id="partie_2"></a>
+----------------------------------------------------------------
 
 <br/>
 <br/>
@@ -202,8 +222,8 @@ terminal.
 <br/>
 
 
-Basic functionality of minishell :
-----------------------------------
+Fonctionnalite_basique_minishell <a id="partie_3"></a>
+------------------------------------------------------
 
 <br/>
 <br/>
@@ -289,8 +309,8 @@ can be made, back to the example above ...
 <br/>
 <br/>
 
-BASH PARSING technique -> PRECEDENCE CLIMBING :
-----------------------------------------
+BASH_PARSING_technique->PRECEDENCE_CLIMBING <a id="partie_4"></a>
+-----------------------------------------------------------------
 
 <br/>
 <br/>
@@ -379,8 +399,8 @@ So **compute_expr** is oblivious to the existence of sub-expressions.
 <br/>
 <br/>
 
-Application of PRECEDENCE CLIMBING on bash arguments :
-------------------------------------
+Application_of_PRECEDENCE_CLIMBING_on_bash_arguments <a id="partie_5"></a>
+--------------------------------------------------------------------------
 
 <br/>
 
@@ -441,8 +461,8 @@ and forking processes.
 
 <br/>
 
-Etapes execution :
-------------------
+Etapes_execution <a id="partie_6"></a>
+--------------------------------------
 
 Notes explicatives sur une version de minishell :
 https://github.com/LucieLeBriquer/minishell/tree/master
@@ -543,8 +563,8 @@ Deboguer un programme qui cree des processus fils peut s'averer assez accablant.
 <br/>
 <br/>
 
-Fonctions builtins :
---------------------
+Fonctions_builtins <a id="partie_7"></a>
+----------------------------------------
 
 The **built-ins** are a set of useful functions that are needed in the Minishell, they differ in complexity, from the easy ones like ```echo``` to
 complex ones.
@@ -578,8 +598,8 @@ probablemet).
 <br/>
 <br/>
 
-Historique de commande :
-------------------------
+Historique_de_commandes <a id="partie_8"></a>
+---------------------------------------------
 
 Pour l'instant, lorsque j'appuie sur les fleches ca me fait des 
 symboles avec [[ A ..., parce qu'on ne gere pas encore l'historique
@@ -592,8 +612,8 @@ final.
 <br/>
 <br/>
 
-Signal
-------
+Signaux <a id="partie_9"></a>
+-----------------------------
 
 <br/>
 
@@ -766,8 +786,8 @@ https://www.codequoi.com/envoyer-et-intercepter-un-signal-en-c/
 <br/>
 <br/>
 
-Errno et la gestion d'erreur en C
----------------------------------
+Errno_et_la_gestion_d_erreur <a id="partie_10"></a>
+--------------------------------------------------------
 
 Lien de l'article : 
 https://www.codequoi.com/errno-et-la-gestion-derreur-en-c/
