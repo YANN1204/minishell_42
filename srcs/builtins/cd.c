@@ -6,46 +6,48 @@
 /*   By: yrio <yrio@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/13 07:25:33 by yrio              #+#    #+#             */
-/*   Updated: 2024/02/13 07:40:04 by yrio             ###   ########.fr       */
+/*   Updated: 2024/02/13 11:57:56 by yrio             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "../../minishell.h"
 
-void	update_pwds(char *dir_path, char *new_dir_path, char **env)
+void	update_pwds(char *dir_path, char *new_dir_path, env_list *list_envs)
 {
 	char	*old_pwd;
-	char	*current_pwd;
 	int		tmp;
 	int		tmp2;
-	
+
 	tmp = 0;
 	tmp2 = 0;
 	old_pwd = NULL;
-	current_pwd = malloc(sizeof(new_dir_path));
-	while (env[tmp])
+	while (list_envs != NULL)
 	{
-		if (!ft_strncmp(env[tmp], "PWD=", 4))
+		if (!ft_strncmp(list_envs->key, "PWD", 3))
 		{
-			new_dir_path = ft_strjoin("PWD=", new_dir_path);
-			env[tmp] =  new_dir_path;
+			free(list_envs->splitting[1]);
+			list_envs->splitting[1] = new_dir_path;
+			list_envs->value =  new_dir_path;
 		}
-		if (!ft_strncmp(env[tmp], "OLDPWD=", 7))
+		if (!ft_strncmp(list_envs->key, "OLDPWD", 6))
 		{
-			dir_path = ft_strjoin("OLDPWD=", dir_path);
-			env[tmp] = dir_path;
+			free(list_envs->splitting[1]);
+			list_envs->splitting[1] = dir_path;
+			list_envs->value = dir_path;
 		}
-		tmp++;
+		list_envs = list_envs->next;
 	}
 }
 
-void	cd_builtins(char **argv, char **env)
+void	cd_builtins(char **argv, t_minishell *minishell)
 {
 	DIR* rep;
 	struct dirent* fichierLU;
 	char	*dir_path;
+	char	*dir_path_tmp;
 	char	*new_dir_path;
 
+	(void)argv;
 	dir_path = NULL;
 	dir_path = getcwd(dir_path, PATH_MAX);
 	rep = NULL;
@@ -56,7 +58,10 @@ void	cd_builtins(char **argv, char **env)
 	fichierLU = readdir(rep);
 	while (!ft_strncmp(fichierLU->d_name, "libft", 5) && fichierLU)
 		fichierLU = readdir(rep);
-	new_dir_path = ft_strjoin(ft_strjoin(dir_path, "/"), "libft");
+	dir_path_tmp = ft_strjoin(dir_path, "/");
+	new_dir_path = ft_strjoin(dir_path_tmp, "libft");
 	chdir("libft");
-	update_pwds(dir_path, new_dir_path, env);
+	update_pwds(dir_path, new_dir_path, minishell->lst_envs);
+	free(dir_path_tmp);
+	free(rep);
 }

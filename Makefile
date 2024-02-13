@@ -6,7 +6,7 @@
 #    By: yrio <yrio@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/10 09:09:09 by yrio              #+#    #+#              #
-#    Updated: 2024/02/13 07:47:42 by yrio             ###   ########.fr        #
+#    Updated: 2024/02/13 09:48:04 by yrio             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ FLAGS = -Wall -Wextra -Werror -g3
 ARCHIVE = libft/libft.a
 BUILTINS = cd.c env.c
 MAIN = main.c
-TOOLS = utils_minishell.c
+TOOLS = utils_minishell.c lst_utils.c
 SRC = $(addprefix srcs/builtins/, $(BUILTINS)) \
 		$(addprefix srcs/main/, $(MAIN)) \
 		$(addprefix srcs/tools/, $(TOOLS))
@@ -26,14 +26,11 @@ OBJ = $(SRC:.c=.o)
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	cc -o $(NAME) $(OBJ) $(ARCHIVE) -lm
-#$(FLAGS)	
+	cc $(FLAGS) -o $(NAME) $(OBJ) $(ARCHIVE) -lm	
 
 %.o: %.c
 	make bonus -C libft
-	cc -g -c $< -o $@
-
-#$(FLAGS)
+	cc $(FLAGS) -g -c $< -o $@
 
 clean:
 	make clean -C libft

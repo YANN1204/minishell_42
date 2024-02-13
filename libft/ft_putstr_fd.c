@@ -6,16 +6,16 @@
 /*   By: yrio <yrio@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/10 18:09:02 by yrio              #+#    #+#             */
-/*   Updated: 2024/01/11 12:17:22 by yrio             ###   ########.fr       */
+/*   Updated: 2024/02/13 11:37:04 by yrio             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_putchar_fd(char c, int fd)
-{
-	write(fd, &c, 1);
-}
+// void	ft_putchar_fd(char c, int fd)
+// {
+// 	write(fd, &c, 1);
+// }
 
 void	ft_putstr_fd(char const *s, int fd)
 {

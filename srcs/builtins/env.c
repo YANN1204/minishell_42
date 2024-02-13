@@ -6,27 +6,23 @@
 /*   By: yrio <yrio@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/13 07:26:19 by yrio              #+#    #+#             */
-/*   Updated: 2024/02/13 07:40:10 by yrio             ###   ########.fr       */
+/*   Updated: 2024/02/13 11:35:40 by yrio             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "../../minishell.h"
 
-void	env_builtins(char **env)
+void	env_builtins(t_minishell *minishell)
 {
-	int	tmp;
-	int	tmp2;
+	env_list	*list_envs;
 	
-	tmp = 0;
-	while (env[tmp])
+	list_envs = minishell->lst_envs;
+	while (list_envs != NULL)
 	{
-		tmp2 = 0;
-		while (env[tmp][tmp2])
-		{
-			ft_putchar(env[tmp][tmp2]);
-			tmp2++;
-		}
-		ft_putchar('\n');
-		tmp++;
+		ft_putstr_fd(list_envs->key, 1);
+		ft_putchar_fd('=', 1);
+		ft_putstr_fd(list_envs->value, 1);
+		ft_putchar_fd('\n', 1);
+		list_envs = list_envs->next;
 	}
 }

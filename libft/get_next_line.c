@@ -6,147 +6,123 @@
 /*   By: yrio <yrio@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 14:28:51 by yrio              #+#    #+#             */
-/*   Updated: 2024/02/05 16:09:00 by yrio             ###   ########.fr       */
+/*   Updated: 2024/02/13 09:16:45 by yrio             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*readfile(int fd, char *stat)
+char	*ft_strlcpy_gnl(char *dst, char *src, size_t size)
 {
-	char	*buffer;
-	int		isread;
+	size_t	tmp;
+	size_t	size_src;
 
-	isread = 1;
-	buffer = malloc((BUFFER_SIZE + 1) * sizeof(char));
-	if (!buffer)
+	if (!dst || !src)
 		return (NULL);
-	buffer[0] = '\0';
-	while (ft_strchr(buffer, '\n') == NULL && isread != 0)
+	size_src = ft_strlen(src);
+	if (size > 0)
 	{
-		isread = read(fd, buffer, BUFFER_SIZE);
-		buffer[isread] = '\0';
-		if (isread == 0)
+		tmp = 0;
+		while (tmp < size_src && tmp < size - 1)
 		{
-			free(buffer);
-			return (stat);
+			dst[tmp] = src[tmp];
+			tmp++;
 		}
-		else if (isread == -1)
-			return (NULL);
-		stat = ft_strjoin2(stat, buffer);
+		dst[tmp] = '\0';
 	}
-	free(buffer);
-	return (stat);
+	return (dst);
 }
 
-char	*putline(char *stat, char *line)
+char	*ft_strdup_gnl(char *str)
 {
-	int		lenchar;
-
-	if (stat == NULL || stat[0] == '\0')
+	char	*dup;
+	size_t	size;
+	
+	size = ft_strlen(str) + 1;
+	dup = malloc(size * sizeof(char));
+	if (!dup)
 		return (NULL);
-	lenchar = 0;
-	while (stat[lenchar] != '\n' && stat[lenchar] != '\0')
-		lenchar++;
-	if (stat[lenchar] == '\n')
-		lenchar++;
-	line = malloc((lenchar + 1) * sizeof(char));
-	if (!line)
-		return (NULL);
-	lenchar = 0;
-	while (stat[lenchar] != '\n' && stat[lenchar] != '\0')
-	{
-		line[lenchar] = stat[lenchar];
-		lenchar++;
-	}
-	if (stat[lenchar] == '\n')
-	{
-		line[lenchar] = '\n';
-		lenchar++;
-	}
-	line[lenchar] = '\0';
-	return (line);
+	ft_strlcpy_gnl(dup, str, size);
+	return (dup);
 }
 
-char	*putstat(char *stat)
+char	*ft_strjoin_gnl(char *s1, char *s2, size_t size)
 {
-	int		lenchar;
-	int		i;
-	char	*new_stat;
+	char	*str;
+	size_t	size_s1;
 
-	if (stat == NULL)
+	if (!s1 || !s2)
 		return (NULL);
-	if (stat[0] == '\0' || ft_strchr(stat, '\n') == NULL)
+	size_s1 = ft_strlen(s1);
+	str = malloc((size_s1 + size + 1) * sizeof(char));
+	if (!str)
+		return (NULL);
+	ft_strlcpy_gnl(str, s1, size_s1 + 1);
+	ft_strlcpy_gnl((str + size_s1), s2, size + 1);
+	free(s1);
+	return (str);
+}
+
+int	putbuf(char *line, char *buf)
+{
+	char	*newline;
+	int		to_copy;
+
+	newline = ft_strchr(line, '\n');
+	if (newline != NULL)
 	{
-		free(stat);
-		return (NULL);
+		to_copy = newline - line + 1;
+		ft_strlcpy_gnl(buf, newline + 1, BUFFER_SIZE + 1);
 	}
-	lenchar = 0;
-	while (stat[lenchar] != '\n' && stat[lenchar] != '\0')
-		lenchar++;
-	new_stat = malloc((ft_strlen_gnl(stat) - lenchar + 1) * sizeof(char));
-	if (new_stat == NULL)
-		return (NULL);
-	i = 0;
-	lenchar++;
-	while (stat[lenchar] != '\0')
-		new_stat[i++] = stat[lenchar++];
-	new_stat[i] = '\0';
-	free(stat);
-	return (new_stat);
+	else
+	{
+		to_copy = ft_strlen(line);
+		ft_strlcpy_gnl(buf, "", BUFFER_SIZE + 1);
+	}
+	return (to_copy);
 }
 
 char	*get_next_line(int fd)
 {
-	static char	*stat;
+	static char	buf[BUFFER_SIZE + 1];
 	char		*line;
+	int			countread;
+	int			to_copy;
 
-	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, &line, 0) < 0)
-		return (NULL);
-	line = NULL;
-	stat = readfile(fd, stat);
-	line = putline(stat, line);
-	stat = putstat(stat);
+	line = ft_strdup_gnl(buf);
+	while (!ft_strchr(line, '\n') && (countread = read(fd, buf, BUFFER_SIZE)) > 0)
+	{
+		buf[countread] = '\0';
+		line = ft_strjoin_gnl(line, buf, countread);
+	}
+	if (!ft_strlen(line))
+		return (free(line), NULL);
+	to_copy = putbuf(line, buf);
+	line[to_copy] = '\0';
 	return (line);
 }
 
 /*
 int	main(void)
 {
-	char		*namefile;
-	char		*line;
-	char		*line2;
-	//char		*line3;
-	int			fd;
+	char	*line;
+	int		fd;
 
-	namefile = "numbers.dict";
-	fd = open(namefile, O_RDONLY);
+	fd = open("test.txt", O_RDONLY);
 	if (fd == -1)
 	{
-		perror("Le fichier n'a pas pu etre ouvert");
-		exit(EXIT_FAILURE);
+		printf("Does not open file");
+		return (0);
 	}
-	line = get_next_line(fd);
-	printf("%s", line);
-	line2 = get_next_line(fd);
-	printf("%s", line2);
-	//line3 = get_next_line(fd);
-	//printf("%s", line3);
-	if (line != NULL)
+	line = get_next_line(0);
+	while (line)
 	{
+		printf("%s", line);
 		free(line);
-		//printf("bien malloc line\n");
+		line = get_next_line(0);
+		if (line[0] == 'z')
+			return (free(line), 1);
 	}
-	if (line2 != NULL)
-	{
-		//free(line2);
-		//printf("bien malloc line2\n");
-	}
-	if (line3 != NULL)
-	{
-		free(line3);
-		printf("bien malloc line3\n");
-	}
-	return (0);
+	return (1);
 }
 */

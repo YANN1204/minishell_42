@@ -6,7 +6,7 @@
 /*   By: yrio <yrio@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/05 12:37:47 by yrio              #+#    #+#             */
-/*   Updated: 2024/02/13 07:40:24 by yrio             ###   ########.fr       */
+/*   Updated: 2024/02/13 10:57:51 by yrio             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ void	ls_cmd(void)
 	ft_putchar('\n');
 	if (closedir(rep) == -1)
 		exit(-1);
+	free(dir_path);
 }
 
 char	**get_paths(char **env)
@@ -73,3 +74,32 @@ char	**free_split(char **char_tab)
 	free(char_tab);
 	return (NULL);
 }
+
+void	malloc_env(t_minishell *minishell, char **env)
+{
+	env_list	*new;
+	env_list	*lst;
+	int			tmp;
+	int			tmp2;
+
+	tmp = 0;
+	while (env[tmp])
+		tmp++;
+	lst = lst_new(env[0]);
+	lst->index = 0;
+	minishell->lst_envs = lst;
+	tmp2 = 1;
+	while (tmp2 < tmp)
+	{
+		new = lst_new(env[tmp2]);
+		new->index = tmp2;
+		lstadd_back(new, lst);
+		tmp2++;
+	}
+}
+
+// Je vais faire une liste chaine avec tout les elements de env qui sont 
+// malloc et je vais split la chaine en 2 avec le '=' et il y aura un attribut
+// 'key' et un attribut 'value' dans chaque element de ma liste chaine
+// Pour la key 'DBUS_SESSION_BUS_ADDRESS' de l'environnement il y a deux egal
+// et donc cela pose un probleme avec le split
