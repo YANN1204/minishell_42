@@ -586,6 +586,7 @@ repertoire de travail.
 un moment donnee, et il faudrait que je trouve le bon endroit ou le faire (fin
 de la fonction ou plutot a la fin du programme avec un free d'une structure
 probablemet).
+- Il faut que je gere le fait de trouver le bon dossier malgre le fait qu'il y ai un espace apres le nom du dossier avec 'cd'.
 
 **exit :**
 

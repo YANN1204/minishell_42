@@ -6,7 +6,7 @@
 /*   By: yrio <yrio@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/05 08:01:00 by yrio              #+#    #+#             */
-/*   Updated: 2024/02/13 13:14:34 by yrio             ###   ########.fr       */
+/*   Updated: 2024/02/13 17:43:26 by yrio             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,12 +49,16 @@ char		**ft_split(char const *s, char c);
 int			ft_strncmp(const char *s1, const char *s2, unsigned int n);
 
 void		ft_cd(char **argv, t_minishell *minishell);
+
 void		ft_env(t_minishell *minishell);
+int			check_env_key(t_minishell *minishell, char *str);
+char		*get_value_env(t_minishell *minishell, char *key);
 
 env_list	*lst_new(char *str);
 void		lstadd_back(env_list *new, env_list *lst);
 void		lstclear(env_list *lst);
 env_list	*lst_index(env_list *lst, int index);
+
 
 void		ls_cmd(void);
 char		**get_paths(char **env);

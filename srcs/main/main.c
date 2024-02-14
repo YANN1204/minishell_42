@@ -6,7 +6,7 @@
 /*   By: yrio <yrio@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/05 08:00:47 by yrio              #+#    #+#             */
-/*   Updated: 2024/02/13 14:00:32 by yrio             ###   ########.fr       */
+/*   Updated: 2024/02/14 07:49:49 by yrio             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,8 @@ int	main(int argc, char **argv, char **env)
 	{	
 		args_split = ft_split(line, ' ');
 		if (!ft_strncmp(args_split[0], "cd", 2) && \
-			ft_strlen(args_split[0]) == ft_strlen("cd"))
+			(ft_strlen(args_split[0]) == ft_strlen("cd") || \
+			ft_strlen(args_split[0]) - 1 == ft_strlen("cd")))
 			ft_cd(args_split, &minishell);
 		if (!ft_strncmp(args_split[0], "env", 3) && \
 			ft_strlen(args_split[0]) - 1 == ft_strlen("env"))
