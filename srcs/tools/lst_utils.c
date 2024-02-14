@@ -6,7 +6,7 @@
 /*   By: yrio <yrio@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/13 09:46:38 by yrio              #+#    #+#             */
-/*   Updated: 2024/02/14 07:54:28 by yrio             ###   ########.fr       */
+/*   Updated: 2024/02/14 14:53:50 by yrio             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ void	lstclear(env_list *lst)
 	{
 		second = first;
 		first = first -> next;
+		//printf("key : %s, value %s\n", second->key, second->value);
 		free_split(second->splitting);
 		free(second);
 	}

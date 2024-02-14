@@ -587,6 +587,8 @@ un moment donnee, et il faudrait que je trouve le bon endroit ou le faire (fin
 de la fonction ou plutot a la fin du programme avec un free d'une structure
 probablemet).
 - Il faut que je gere le fait de trouver le bon dossier malgre le fait qu'il y ai un espace apres le nom du dossier avec 'cd'.
+- Lorsque le dossier suivant la commande cd n'est pas trouve, il ne faut pas 
+mettre a jour les variables d'environnements.
 
 **exit :**
 
@@ -608,6 +610,9 @@ des commandes et le fait de pouvoir le remonter avec la fleche du
 haut, et d'ailleurs les flches de gauche et droite ne sont pas 
 censee faire aussi les [[ C quand j'appuie dessus dans la version 
 final.
+
+La fonction readline a un historique que l'on peut associer aux touches
+fleche du haut et du bas.
 
 <br/>
 <br/>
