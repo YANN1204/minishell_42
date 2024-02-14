@@ -6,7 +6,7 @@
 /*   By: yrio <yrio@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/13 07:25:33 by yrio              #+#    #+#             */
-/*   Updated: 2024/02/14 15:16:01 by yrio             ###   ########.fr       */
+/*   Updated: 2024/02/14 16:59:05 by yrio             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ int	go_to_folder(char *dir_path, char *new_dir_path, char **args_split)
 	DIR				*rep;
 	struct dirent	*fichierlu;
 
-	if (args_split[1] && args_split[1][0] != '\n')
+	if (args_split[1] && args_split[1][0] != '\n' && args_split[1][0] != '~')
 	{
 		rep = opendir(dir_path);
 		if (!rep)
@@ -96,7 +96,8 @@ int	go_to_folder(char *dir_path, char *new_dir_path, char **args_split)
 	return (1);
 }
 
-void	update_pwds(char *dir_path, char *new_dir_path, t_minishell *minishell)
+void	update_pwds(char *dir_path, char *new_dir_path, \
+					char **args_split, t_minishell *minishell)
 {
 	char		*home_path;
 	env_list	*list_envs;	
@@ -107,6 +108,10 @@ void	update_pwds(char *dir_path, char *new_dir_path, t_minishell *minishell)
 	{
 		if (!ft_strncmp(list_envs->key, "PWD", 3))
 		{
+			if (args_split[1] && !ft_strncmp(args_split[1], ".", 1) && \
+				(ft_strlen(args_split[1]) - 1 == ft_strlen(".") || \
+				ft_strlen(args_split[1]) == ft_strlen(".")))
+				return (free(new_dir_path));
 			free(list_envs->splitting[1]);
 			list_envs->splitting[1] = new_dir_path;
 			list_envs->value = new_dir_path;
@@ -131,13 +136,14 @@ void	ft_cd(char **args_split, t_minishell *minishell)
 	dir_path = NULL;
 	dir_path = getcwd(dir_path, PATH_MAX);
 	new_dir_path = NULL;
-	if (!args_split[1] || args_split[1][0] == '\n')
+	if (!args_split[1] || args_split[1][0] == '\n' || \
+		args_split[1][0] == '~')
 		new_dir_path = particular_path(minishell, dir_path, 0);
 	else if (!ft_strncmp(args_split[1], "..", 2) && (ft_strlen(args_split[1]) \
 	- 1 == ft_strlen("..") || ft_strlen(args_split[1]) == ft_strlen("..")))
 		new_dir_path = particular_path(minishell, dir_path, 1);
 	if (args_split[1] && ft_strncmp(args_split[1], "..", 2) && \
-		args_split[1][0] != '\n')
+		args_split[1][0] != '\n' && ft_strncmp(args_split[1], "~", 1))
 	{
 		dir_path_tmp = ft_strjoin(dir_path, "/");
 		new_dir_path = ft_strjoin(dir_path_tmp, args_split[1]);
@@ -146,5 +152,5 @@ void	ft_cd(char **args_split, t_minishell *minishell)
 			new_dir_path[ft_strlen(new_dir_path) - 1] = '\0';
 	}
 	if (go_to_folder(dir_path, new_dir_path, args_split))
-		update_pwds(dir_path, new_dir_path, minishell);
+		update_pwds(dir_path, new_dir_path, args_split, minishell);
 }
