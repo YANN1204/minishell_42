@@ -6,7 +6,7 @@
 /*   By: yrio <yrio@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/13 07:26:19 by yrio              #+#    #+#             */
-/*   Updated: 2024/02/13 17:42:51 by yrio             ###   ########.fr       */
+/*   Updated: 2024/02/15 07:47:43 by yrio             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	check_env_key(t_minishell *minishell, char *str)
 {
-	env_list	*lst;
+	t_envlist	*lst;
 
 	lst = minishell->lst_envs;
 	while (lst)
@@ -29,7 +29,7 @@ int	check_env_key(t_minishell *minishell, char *str)
 
 char	*get_value_env(t_minishell *minishell, char *key)
 {
-	env_list	*lst;
+	t_envlist	*lst;
 
 	lst = minishell->lst_envs;
 	while (lst)
@@ -44,7 +44,7 @@ char	*get_value_env(t_minishell *minishell, char *key)
 
 void	ft_env(t_minishell *minishell)
 {
-	env_list	*list_envs;
+	t_envlist	*list_envs;
 	
 	list_envs = minishell->lst_envs;
 	while (list_envs != NULL)

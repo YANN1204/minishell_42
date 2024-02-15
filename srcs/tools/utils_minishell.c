@@ -6,7 +6,7 @@
 /*   By: yrio <yrio@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/05 12:37:47 by yrio              #+#    #+#             */
-/*   Updated: 2024/02/13 17:04:32 by yrio             ###   ########.fr       */
+/*   Updated: 2024/02/15 07:48:09 by yrio             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,8 +77,8 @@ char	**free_split(char **char_tab)
 
 void	malloc_env(t_minishell *minishell, char **env)
 {
-	env_list	*new;
-	env_list	*lst;
+	t_envlist	*new;
+	t_envlist	*lst;
 	int			tmp;
 	int			tmp2;
 

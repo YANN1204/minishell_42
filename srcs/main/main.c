@@ -6,7 +6,7 @@
 /*   By: yrio <yrio@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/05 08:00:47 by yrio              #+#    #+#             */
-/*   Updated: 2024/02/14 09:28:54 by yrio             ###   ########.fr       */
+/*   Updated: 2024/02/15 09:17:37 by yrio             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,15 @@ int	main(int argc, char **argv, char **env)
 		if (!ft_strncmp(args_split[0], "ls", 2) && \
 			ft_strlen(args_split[0]) - 1 == ft_strlen("ls"))
 			ls_cmd();
+		if (!ft_strncmp(args_split[0], "pwd", 3) && \
+			ft_strlen(args_split[0]) - 1 == ft_strlen("pwd"))
+			ft_pwd();
+		if (!ft_strncmp(args_split[0], "export", 6) && \
+			ft_strlen(args_split[0]) == ft_strlen("export"))
+			printf("return export : %d\n", ft_export(args_split, &minishell));
+		if (!ft_strncmp(args_split[0], "unset", 5) && \
+			ft_strlen(args_split[0]) == ft_strlen("unset"))
+			ft_unset(args_split, &minishell);
 		if (!ft_strncmp(args_split[0], "exit", 4) && \
 			ft_strlen(args_split[0]) - 1 == ft_strlen("exit"))
 		{

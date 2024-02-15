@@ -589,12 +589,18 @@ probablemet).
 - Il faut que je gere le fait de trouver le bon dossier malgre le fait qu'il y ai un espace apres le nom du dossier avec 'cd'.
 - Lorsque le dossier suivant la commande cd n'est pas trouve, il ne faut pas 
 mettre a jour les variables d'environnements.
+
+<br/>
+
 - Il faut que je fasse le 'cd ~' : pour l'instant le cd ~ marche quand meme
 lorsque j'ajoute directement quelque chose apres le ~ alors qu'il devrait
 renvoyer : No such file or directory. Mais, je ne vais pas rajouter de code
 pour gerer cette fonctionnalite car ca va trop surcharger le code. Car,
 lorsqu'il y aura l'algo de parsing, tout les cas particulier ne seront
 plus a gerer et le code se simplifiera
+- Il faudra pas que j'oublie de de proteger la fonction 'getcwd'.
+
+<br/>
 
 **exit :**
 

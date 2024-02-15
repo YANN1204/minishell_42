@@ -6,18 +6,18 @@
 /*   By: yrio <yrio@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/13 09:46:38 by yrio              #+#    #+#             */
-/*   Updated: 2024/02/14 14:53:50 by yrio             ###   ########.fr       */
+/*   Updated: 2024/02/15 07:47:15 by yrio             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "../../minishell.h"
 
-env_list	*lst_new(char *str)
+t_envlist	*lst_new(char *str)
 {
-	env_list	*new;
+	t_envlist	*new;
 	char		**splitting;
 
-	new = malloc(sizeof(env_list));
+	new = malloc(sizeof(t_envlist));
 	if (!new)
 		exit(0);
 	splitting = ft_split(str, '=');
@@ -33,9 +33,9 @@ env_list	*lst_new(char *str)
 	return (new);
 }
 
-void	lstadd_back(env_list *new, env_list *lst)
+void	lstadd_back(t_envlist *new, t_envlist *lst)
 {
-	env_list	*tmp;
+	t_envlist	*tmp;
 
 	tmp = lst;
 	while (tmp->next != NULL)
@@ -45,10 +45,10 @@ void	lstadd_back(env_list *new, env_list *lst)
 	tmp->next = new;
 }
 
-void	lstclear(env_list *lst)
+void	lstclear(t_envlist *lst)
 {
-	env_list	*first;
-	env_list	*second;
+	t_envlist	*first;
+	t_envlist	*second;
 
 	if (lst == NULL)
 		return ;
@@ -57,7 +57,6 @@ void	lstclear(env_list *lst)
 	{
 		second = first;
 		first = first -> next;
-		//printf("key : %s, value %s\n", second->key, second->value);
 		free_split(second->splitting);
 		free(second);
 	}
@@ -65,7 +64,7 @@ void	lstclear(env_list *lst)
 }
 
 
-env_list	*lst_index(env_list *lst, int index)
+t_envlist	*lst_index(t_envlist *lst, int index)
 {
 	if (lst == NULL)
 		return (NULL);

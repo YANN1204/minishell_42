@@ -6,7 +6,7 @@
 /*   By: yrio <yrio@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/13 07:25:33 by yrio              #+#    #+#             */
-/*   Updated: 2024/02/14 16:59:05 by yrio             ###   ########.fr       */
+/*   Updated: 2024/02/15 07:46:00 by yrio             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ void	update_pwds(char *dir_path, char *new_dir_path, \
 					char **args_split, t_minishell *minishell)
 {
 	char		*home_path;
-	env_list	*list_envs;	
+	t_envlist	*list_envs;	
 
 	home_path = get_value_env(minishell, "HOME");
 	list_envs = minishell->lst_envs;
