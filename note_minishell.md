@@ -575,6 +575,9 @@ Les fonctions ```built-ins``` n'ont pas besoin d'utiliser ```execve``` car elles
 
 La fonction echo avec l'option '-n' ne renvoie pas de '\n', mais on peut mettre plusieus fois le flag '-n' avec un nombre de n non limite et cela doit quand meme fonction et renvoyer le message de l'argument avec un '\n', mais si dans l'un des flag '-n' il y a un caractere qui n'est pas un 'n' alors la fonction considere que ce flag et tout ce qui suit font partit de l'argument a afficher et renvoie cette chaine avec un '\n' si il y a un
 flag '-n' devant.
+- La commande echo enleve tout les espaces avant et apres l'argument a afficher.
+
+<br/>
 
 **cd :** 
 
@@ -589,6 +592,7 @@ probablemet).
 - Il faut que je gere le fait de trouver le bon dossier malgre le fait qu'il y ai un espace apres le nom du dossier avec 'cd'.
 - Lorsque le dossier suivant la commande cd n'est pas trouve, il ne faut pas 
 mettre a jour les variables d'environnements.
+- Ne pas oublier 'cd -' qui revient au pwd d'avant (oldpwd).
 
 <br/>
 
@@ -599,6 +603,21 @@ pour gerer cette fonctionnalite car ca va trop surcharger le code. Car,
 lorsqu'il y aura l'algo de parsing, tout les cas particulier ne seront
 plus a gerer et le code se simplifiera
 - Il faudra pas que j'oublie de de proteger la fonction 'getcwd'.
+
+<br/>
+
+**export :**
+
+- Lorsque je met 'export' sans argument, il est possible que je doivent
+afficher tout ce qui a ete declare dans le env comme le comportement de
+export dans bash.
+- Je dois renvoyer une erreur avec perror `argument': not a valid identifier lorsque la cle commence par un chiffre.
+- Lorsque je met un argument apres le export sans '=' il ne faut pas que 
+cela mette un message d'erreur, ca doit juste rien faire.
+- Lorsque j'ai un caractere qui n'est pas une lettre ou un chiffre dans 
+l'argument, meme s'il y a un egal je dois renvoyer une erreur (en plus,
+les chiffres ne sont pas autorisees pour l'index 0 de l'argument).
+- Penser a gerer lorsque je met un '==' avec la fonction export : export sfd==wa.
 
 <br/>
 

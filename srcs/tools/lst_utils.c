@@ -6,7 +6,7 @@
 /*   By: yrio <yrio@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/13 09:46:38 by yrio              #+#    #+#             */
-/*   Updated: 2024/02/15 07:47:15 by yrio             ###   ########.fr       */
+/*   Updated: 2024/02/15 17:08:38 by yrio             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ t_envlist	*lst_new(char *str)
 	new = malloc(sizeof(t_envlist));
 	if (!new)
 		exit(0);
-	splitting = ft_split(str, '=');
+	splitting = ft_split_onedel(str, '=');
 	if (!splitting)
 		exit(0);
 	new->key = splitting[0];

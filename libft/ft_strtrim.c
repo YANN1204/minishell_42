@@ -6,7 +6,7 @@
 /*   By: yrio <yrio@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/10 11:53:36 by yrio              #+#    #+#             */
-/*   Updated: 2023/11/21 10:42:10 by yrio             ###   ########.fr       */
+/*   Updated: 2024/02/15 16:28:33 by yrio             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,20 +39,20 @@ char	*ft_strtrim(char const *s1, char const *set)
 	new_str = ft_substr(s1, i, j + 1 - i);
 	return (new_str);
 }
-/*
-int 	main(void)
-{
-	char const	*s1 = "b onjourf b  ";
-	char const	*set = "b ";
-	char	*new_str;
 
-	new_str = ft_strtrim(s1, set);
-	printf("%s", new_str);
-	if (new_str != NULL)
-	{
-		free(new_str);
-		printf("\nbien malloc");
-	}
-	return (0);
-}
-*/
+// int 	main(void)
+// {
+// 	char const	*s1 = "b onjbourf b  ";
+// 	char const	*set = "b";
+// 	char	*new_str;
+
+// 	new_str = ft_strtrim(s1, set);
+// 	printf("%s", new_str);
+// 	if (new_str != NULL)
+// 	{
+// 		free(new_str);
+// 		printf("\nbien malloc");
+// 	}
+// 	return (0);
+// }
+

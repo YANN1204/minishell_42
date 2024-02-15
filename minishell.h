@@ -6,7 +6,7 @@
 /*   By: yrio <yrio@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/05 08:01:00 by yrio              #+#    #+#             */
-/*   Updated: 2024/02/15 09:16:30 by yrio             ###   ########.fr       */
+/*   Updated: 2024/02/15 17:11:12 by yrio             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,11 +46,13 @@ char		*ft_strchr(const char *s, int c);
 char		*ft_substr(char const *s, unsigned int start, size_t len);
 char		**ft_split(char const *s, char c);
 int			ft_strncmp(const char *s1, const char *s2, unsigned int n);
+char		**ft_free(char **char_tab, int nb_words);
 
 void		ft_cd(char **argv, t_minishell *minishell);
 void		ft_pwd(void);
 void		ft_unset(char **args_split, t_minishell *minishell);
 int			ft_export(char	**args_split, t_minishell *minishell);
+void		ft_echo(char **args_split);
 
 void		ft_env(t_minishell *minishell);
 int			check_env_key(t_minishell *minishell, char *str);
@@ -65,5 +67,6 @@ void		ls_cmd(void);
 char		**get_paths(char **env);
 char		**free_split(char **char_tab);
 void		malloc_env(t_minishell *minishell, char **env);
+char		**ft_split_onedel(char const *s, char c);
 
 #endif

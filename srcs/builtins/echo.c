@@ -6,8 +6,15 @@
 /*   By: yrio <yrio@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 17:44:32 by yrio              #+#    #+#             */
-/*   Updated: 2024/02/14 17:44:43 by yrio             ###   ########.fr       */
+/*   Updated: 2024/02/15 09:33:03 by yrio             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
+
+void	ft_echo(char **args_split)
+{
+	(void)args_split;
+
+	
+}

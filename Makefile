@@ -6,7 +6,7 @@
 #    By: yrio <yrio@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/10 09:09:09 by yrio              #+#    #+#              #
-#    Updated: 2024/02/14 17:46:15 by yrio             ###   ########.fr        #
+#    Updated: 2024/02/15 17:09:54 by yrio             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ FLAGS = -Wall -Wextra -Werror -g3
 ARCHIVE = libft/libft.a
 BUILTINS = cd.c env.c unset.c export.c pwd.c echo.c exit.c
 MAIN = main.c
-TOOLS = utils_minishell.c lst_utils.c
+TOOLS = utils_minishell.c lst_utils.c utils2_minishell.c
 SRC = $(addprefix srcs/builtins/, $(BUILTINS)) \
 		$(addprefix srcs/main/, $(MAIN)) \
 		$(addprefix srcs/tools/, $(TOOLS))
