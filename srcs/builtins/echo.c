@@ -6,7 +6,7 @@
 /*   By: yrio <yrio@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 17:44:32 by yrio              #+#    #+#             */
-/*   Updated: 2024/02/16 15:04:27 by yrio             ###   ########.fr       */
+/*   Updated: 2024/02/16 15:27:17 by yrio             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ void	ft_echo(char **args_split)
 			if (first_arg <= nb_args)
 				ft_putchar_fd(' ', 1);
 		}
-		if (!flag)
+		if (flag)
 			ft_putchar_fd('\n', 1);
 	}
 }
