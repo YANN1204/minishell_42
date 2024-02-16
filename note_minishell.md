@@ -584,7 +584,6 @@ flag '-n' devant.
 - Lorsque j'effectue un cd je dois mettre a jour PWD et OLDPWD, 
 je remplace OLDPWD par PWD et je remplace PWD par le nouveau 
 repertoire de travail.
-- Il faut egalement que je gere le ```cd ..``` et l'histoire du dossier supprime et lorsque l'on fait ```cd ..``` a l'interieur d'un dossier qui se trouve dans le dossier supprimee et que les variables d'environnements PWD et OLDPWD ont ete *unset*.
 - Il faut que je free le malloc 'current_pwd' de ma fonction 'update_pwds' a
 un moment donnee, et il faudrait que je trouve le bon endroit ou le faire (fin
 de la fonction ou plutot a la fin du programme avec un free d'une structure
@@ -592,10 +591,6 @@ probablemet).
 - Il faut que je gere le fait de trouver le bon dossier malgre le fait qu'il y ai un espace apres le nom du dossier avec 'cd'.
 - Lorsque le dossier suivant la commande cd n'est pas trouve, il ne faut pas 
 mettre a jour les variables d'environnements.
-- Ne pas oublier 'cd -' qui revient au pwd d'avant (oldpwd).
-
-<br/>
-
 - Il faut que je fasse le 'cd ~' : pour l'instant le cd ~ marche quand meme
 lorsque j'ajoute directement quelque chose apres le ~ alors qu'il devrait
 renvoyer : No such file or directory. Mais, je ne vais pas rajouter de code
@@ -603,6 +598,20 @@ pour gerer cette fonctionnalite car ca va trop surcharger le code. Car,
 lorsqu'il y aura l'algo de parsing, tout les cas particulier ne seront
 plus a gerer et le code se simplifiera
 - Il faudra pas que j'oublie de de proteger la fonction 'getcwd'.
+- Ne pas oublier 'cd -' qui revient au pwd d'avant (oldpwd) -> (je l'ai fais mais
+pour l'instant ca effectue la commande meme quand il y a des caracteres apres le
+'-' du genre 'cd -jsvn').
+- Il faudrait que je refasse la fonction cd en rajoutant une fonction qui calcule
+tout les new_dir_path en fonction des cas, avec une pour le cas generale et une 
+pour les cas particulier et qui gere tout les cas particulier a l'interieur de
+cette fonction.
+
+<br/>
+
+- Il faut egalement que je gere le ```cd ..``` et l'histoire du dossier supprime et lorsque l'on fait ```cd ..``` a l'interieur d'un dossier qui se trouve dans le dossier supprimee et que les variables d'environnements PWD et OLDPWD ont ete *unset*.
+- A voir si je suis cense trouver le dossier meme quand j'unset le PWD (mais que
+du coup je ne l'utilise pas) pour aller au fichier suivant, parce que moi j'arrete la fonction cd des que l'une des variables d'environnement comme le 
+'HOME', 'PWD' ou 'OLDPWD' n'est pas defini, mais ce n'est peut-etre pas correct.
 
 <br/>
 
