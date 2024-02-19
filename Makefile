@@ -6,13 +6,14 @@
 #    By: yrio <yrio@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/10 09:09:09 by yrio              #+#    #+#              #
-#    Updated: 2024/02/15 17:09:54 by yrio             ###   ########.fr        #
+#    Updated: 2024/02/19 11:57:43 by yrio             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
 
 FLAGS = -Wall -Wextra -Werror -g3
+FLAG_READLINE = -lreadline
 ARCHIVE = libft/libft.a
 BUILTINS = cd.c env.c unset.c export.c pwd.c echo.c exit.c
 MAIN = main.c
@@ -26,7 +27,7 @@ OBJ = $(SRC:.c=.o)
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	cc $(FLAGS) -o $(NAME) $(OBJ) $(ARCHIVE) -lm	
+	cc $(FLAG_READLINE) $(FLAGS) -o $(NAME) $(OBJ) $(ARCHIVE) -lm	
 
 %.o: %.c
 	make bonus -C libft

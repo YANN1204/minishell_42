@@ -6,7 +6,7 @@
 /*   By: yrio <yrio@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/05 08:01:00 by yrio              #+#    #+#             */
-/*   Updated: 2024/02/19 09:29:44 by yrio             ###   ########.fr       */
+/*   Updated: 2024/02/19 11:42:34 by yrio             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # include <string.h>
 # include <unistd.h>
 # include <dirent.h>
+# include <readline/readline.h>
 # include <readline/history.h>
 # include <errno.h>
 # include <stdlib.h>

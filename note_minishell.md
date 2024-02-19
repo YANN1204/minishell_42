@@ -67,7 +67,9 @@ la liste d'annulation associee a la ligne actuelle est effacee.
 
 **rl_redisplay** : Change le contenus de ce qui est affiche a l'ecran
 pour refleter le contenus actuel de 'rl_line_buffer'.
-add_history : place la chaine de caractere fournis en argument a la
+
+
+**add_history** : place la chaine de caractere fournis en argument a la
 fin de l'historique. Le champ de données associé (le cas échéant) est 
 défini sur NULL.
 
@@ -635,10 +637,11 @@ les chiffres ne sont pas autorisees pour l'index 0 de l'argument).
 - Attention au parsing de ```exit``` : ```a``` ou ```a 1``` ou ```3.14``` : ```exit(2)``` + erreur ```numeric argument required```
 - ```1 a``` ou ```1 2``` : pas d'exit + $? = 1 + erreur ```too may arguments```
 - Si juste un argument numerique -> le convertir en % 256 et exit avec cette valeur
+- Gerer le cas ou il n'y a pas d'argument au niveau de exit
 
 <br/>
 
-Re-verifier avec d'autres personnes si ma fonction exit est correct
+- Re-verifier avec d'autres personnes si ma fonction exit est correct
 
 
 <br/>

@@ -6,7 +6,7 @@
 /*   By: yrio <yrio@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 08:51:20 by yrio              #+#    #+#             */
-/*   Updated: 2024/02/15 08:48:39 by yrio             ###   ########.fr       */
+/*   Updated: 2024/02/19 17:16:49 by yrio             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,10 @@ void	ft_unset(char **args_split, t_minishell *minishell)
 	while (lst_envs)
 	{
 		if (!ft_strncmp(lst_envs->key, args_split[1], ft_strlen(lst_envs->key)) \
-			&& ft_strlen(args_split[1]) - 1 == ft_strlen(lst_envs->key))
+			&& (ft_strlen(args_split[1]) - 1 == ft_strlen(lst_envs->key) || \
+			ft_strlen(args_split[1]) == ft_strlen(lst_envs->key)))
 		{
+			
 			if (previous && !lst_envs->next)
 				previous->next = NULL;
 			else if (previous && lst_envs->next)

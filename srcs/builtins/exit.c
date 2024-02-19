@@ -6,7 +6,7 @@
 /*   By: yrio <yrio@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 17:45:55 by yrio              #+#    #+#             */
-/*   Updated: 2024/02/19 10:58:59 by yrio             ###   ########.fr       */
+/*   Updated: 2024/02/19 11:56:39 by yrio             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,9 +72,9 @@ void	ft_exit(char **args_split)
 	ft_putendl_fd("exit", STDOUT_FILENO);
 	if (!args_split[1])
 		exit_code = 0;
-	if (args_split[2])
+	if (args_split[1] && args_split[2])
 		return (ft_putendl_fd("bash: exit: too many arguments", STDERR_FILENO));
-	else
+	else if (args_split[1])
 	{
 		args_split[1][ft_strlen(args_split[1]) - 1] = '\0';
 		tmp = 0;
