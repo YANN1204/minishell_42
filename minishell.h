@@ -6,7 +6,7 @@
 /*   By: yrio <yrio@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/05 08:01:00 by yrio              #+#    #+#             */
-/*   Updated: 2024/02/15 17:11:12 by yrio             ###   ########.fr       */
+/*   Updated: 2024/02/19 09:29:44 by yrio             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@
 # include <stdlib.h>
 # include <linux/limits.h>
 # include "libft/libft.h"
+
+extern int	g_last_exit_code;
 
 typedef struct t_list {
 	int				index;
@@ -53,6 +55,7 @@ void		ft_pwd(void);
 void		ft_unset(char **args_split, t_minishell *minishell);
 int			ft_export(char	**args_split, t_minishell *minishell);
 void		ft_echo(char **args_split);
+void		ft_exit(char **args_split);
 
 void		ft_env(t_minishell *minishell);
 int			check_env_key(t_minishell *minishell, char *str);

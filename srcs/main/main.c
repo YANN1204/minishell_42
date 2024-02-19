@@ -6,7 +6,7 @@
 /*   By: yrio <yrio@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/05 08:00:47 by yrio              #+#    #+#             */
-/*   Updated: 2024/02/16 09:01:00 by yrio             ###   ########.fr       */
+/*   Updated: 2024/02/19 08:25:51 by yrio             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,11 +51,13 @@ int	main(int argc, char **argv, char **env)
 			ft_strlen(args_split[0]) - 1 == ft_strlen("echo")))
 			ft_echo(args_split);
 		if (!ft_strncmp(args_split[0], "exit", 4) && \
-			ft_strlen(args_split[0]) - 1 == ft_strlen("exit"))
+			(ft_strlen(args_split[0]) - 1 == ft_strlen("exit") || \
+			ft_strlen(args_split[0]) == ft_strlen("exit")))
 		{
 			free(line);
-			free_split(args_split);
-			break ;
+			//free_split(args_split);
+			lstclear(minishell.lst_envs);
+			ft_exit(args_split);
 		}
 		free(line);
 		free_split(args_split);
