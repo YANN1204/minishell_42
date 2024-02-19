@@ -636,6 +636,10 @@ les chiffres ne sont pas autorisees pour l'index 0 de l'argument).
 - ```1 a``` ou ```1 2``` : pas d'exit + $? = 1 + erreur ```too may arguments```
 - Si juste un argument numerique -> le convertir en % 256 et exit avec cette valeur
 
+<br/>
+
+Re-verifier avec d'autres personnes si ma fonction exit est correct
+
 
 <br/>
 <br/>

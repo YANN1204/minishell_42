@@ -6,7 +6,7 @@
 /*   By: yrio <yrio@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 17:45:55 by yrio              #+#    #+#             */
-/*   Updated: 2024/02/19 10:50:27 by yrio             ###   ########.fr       */
+/*   Updated: 2024/02/19 10:58:59 by yrio             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ long int	ft_atoi_long(const char *str, int *error)
 			break;
 		i++;
 	}
-	return (result * neg);
+	return ((result * neg) % 256);
 }
 
 int	is_digit(char *arg)
