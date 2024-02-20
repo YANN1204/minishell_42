@@ -15,11 +15,12 @@ Sommaire :
 3. [Fonctionnalite_basique_minishell](#partie_3)
 4. [BASH_PARSING_technique->PRECEDENCE_CLIMBING](#partie_4)
 5. [Application_of_PRECEDENCE_CLIMBING_on_bash_arguments](#partie_5)
-6. [Etapes_execution](#partie_6)
-7. [Fonctions_builtins](#partie_7)
-8. [Historique_de_commandes](#partie_8)
-9. [Signaux](#partie_9)
-10. [Errno_et_la_gestion_d_erreur](#partie_10)
+6. [Environment_and_variables](#partie_6)
+7. [Etapes_execution](#partie_7)
+8. [Fonctions_builtins](#partie_8)
+9. [Historique_de_commandes](#partie_9)
+10. [Signaux](#partie_10)
+11. [Errno_et_la_gestion_d_erreur](#partie_11)
 
 <br/>
 <br/>
@@ -462,8 +463,38 @@ In the execution part, most importantly is how to manage file descriptors
 and forking processes.
 
 <br/>
+<br/>
+<br/>
 
-Etapes_execution <a id="partie_6"></a>
+Environment_and_variables <a id="partie_6"></a>
+-----------------------------------------------
+
+The ```$0``` is one of the special variables you get in bash and is used to print the filename of the script that is currently being executed.
+
+The ```$0``` variable can be used in two ways in linux :
+- Use ```$0``` to find the logged-in shell.
+- Use ```$0``` to print the name of the script that is being executed.
+
+Here's quick look into the special variables you get in bash shell 
+(link article : https://linuxhandbook.com/bash-special-variables/)
+
+- ```$0``` : Gets the name of the current script.
+- ```$#``` : Gets the number of arguments passed while executing the bash script.
+- ```$*``` : Gives you a string containing every command-line argument.
+- ```$@``` : It stores the list of every command-line argument as an array.
+- ```$1-$9``` : Stores the first 9 arguments.
+- ```$?``` : Gets the status of the last command or the most recently executed process.
+- ```$!``` : Shows the process ID of the last background command.
+- ```$$``` : Gets the process ID of the current shell.
+- ```$-``` : It will print the current set of options in your current shell.
+
+Pour minishell on doit juste gerer ```$?```.
+
+<br/>
+<br/>
+<br/>
+
+Etapes_execution <a id="partie_7"></a>
 --------------------------------------
 
 Notes explicatives sur une version de minishell :
@@ -475,6 +506,20 @@ expansion :
 - Si on commence par ```./``` on essaye de lancer l'executable ```./name``` (fork needed)
 - S'il y a un ```=``` on cree une variable d'environnement
 - Sinon, on essaye de lancer l'executable **$(PATH)/name** (fork needed)
+
+<br/>
+
+**Structure fonction main :**
+
+- malloc env
+- Readline
+- Parsing
+- export variable d'environnement si '=' (Expansion)
+
+- check builtin
+- check executable file './'
+- check absolute path cmd or cmd and execute (command exist or right to execute ?)
+- apply redirection and pipe
 
 <br/>
 
@@ -565,7 +610,7 @@ Deboguer un programme qui cree des processus fils peut s'averer assez accablant.
 <br/>
 <br/>
 
-Fonctions_builtins <a id="partie_7"></a>
+Fonctions_builtins <a id="partie_8"></a>
 ----------------------------------------
 
 The **built-ins** are a set of useful functions that are needed in the Minishell, they differ in complexity, from the easy ones like ```echo``` to
@@ -643,12 +688,25 @@ les chiffres ne sont pas autorisees pour l'index 0 de l'argument).
 
 - Re-verifier avec d'autres personnes si ma fonction exit est correct
 
+<br/>
+
+Exit status depands of multiple things :
+- If the command work : 0
+- If a command exist and fail cause of the arg : 1
+- If a command exist and you don't have the permission : 126
+- If a command doesn't exist : 127
+- If a signal Kill or interrupte the commande : 127 + signal
+- If error parsing : 2
+
+Exit status come with Error message in your terminal, don't forget that the error fd
+is 2 (putstr_fd).
+
 
 <br/>
 <br/>
 <br/>
 
-Historique_de_commandes <a id="partie_8"></a>
+Historique_de_commandes <a id="partie_9"></a>
 ---------------------------------------------
 
 Pour l'instant, lorsque j'appuie sur les fleches ca me fait des 
@@ -665,7 +723,7 @@ fleche du haut et du bas.
 <br/>
 <br/>
 
-Signaux <a id="partie_9"></a>
+Signaux <a id="partie_10"></a>
 -----------------------------
 
 <br/>
@@ -839,7 +897,7 @@ https://www.codequoi.com/envoyer-et-intercepter-un-signal-en-c/
 <br/>
 <br/>
 
-Errno_et_la_gestion_d_erreur <a id="partie_10"></a>
+Errno_et_la_gestion_d_erreur <a id="partie_11"></a>
 --------------------------------------------------------
 
 Lien de l'article : 
