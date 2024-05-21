@@ -6,17 +6,17 @@
 /*   By: yrio <yrio@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 17:44:32 by yrio              #+#    #+#             */
-/*   Updated: 2024/02/19 11:54:29 by yrio             ###   ########.fr       */
+/*   Updated: 2024/04/18 13:15:57 by yrio             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../minishell.h"
+#include "minishell.h"
 
 int	check_flag(int *first_arg, char **args_split)
 {
 	int	tmp;
 	int	tmp2;
-	
+
 	tmp = 1;
 	while (args_split[tmp] && !ft_strncmp(args_split[tmp], "-n", 2))
 	{
@@ -42,11 +42,13 @@ int	get_nb_args(char **args_split)
 	tmp = 1;
 	nb_args = 0;
 	if (args_split[tmp])
+	{
 		while (args_split[tmp])
 		{
 			nb_args++;
 			tmp++;
 		}
+	}
 	return (nb_args);
 }
 
@@ -59,8 +61,6 @@ void	ft_echo(char **args_split)
 	first_arg = 1;
 	flag = check_flag(&first_arg, args_split);
 	nb_args = get_nb_args(args_split);
-	if (args_split[nb_args] && args_split[nb_args][ft_strlen(args_split[nb_args]) - 1] == '\n')
-		args_split[nb_args][ft_strlen(args_split[nb_args]) - 1] = '\0';
 	if (!args_split[1])
 		ft_putchar_fd('\n', 1);
 	else if (!ft_strncmp(args_split[1], "-n", 2) && flag && !args_split[2])

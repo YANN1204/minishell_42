@@ -6,13 +6,13 @@
 /*   By: yrio <yrio@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/13 09:46:38 by yrio              #+#    #+#             */
-/*   Updated: 2024/02/15 17:08:38 by yrio             ###   ########.fr       */
+/*   Updated: 2024/04/17 13:43:05 by yrio             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "../../minishell.h"
+#include "minishell.h"
 
-t_envlist	*lst_new(char *str)
+t_envlist	*lst_new(char *str, int display)
 {
 	t_envlist	*new;
 	char		**splitting;
@@ -21,6 +21,8 @@ t_envlist	*lst_new(char *str)
 	if (!new)
 		exit(0);
 	splitting = ft_split_onedel(str, '=');
+	if (splitting[0] && splitting[1] && splitting[2])
+		printf("splitting : %s\n", splitting[2]);
 	if (!splitting)
 		exit(0);
 	new->key = splitting[0];
@@ -28,6 +30,7 @@ t_envlist	*lst_new(char *str)
 		new->value = splitting[1];
 	else
 		new->value = NULL;
+	new->display = display;
 	new->splitting = splitting;
 	new->next = NULL;
 	return (new);
@@ -63,8 +66,7 @@ void	lstclear(t_envlist *lst)
 	lst = NULL;
 }
 
-
-t_envlist	*lst_index(t_envlist *lst, int index)
+t_lstcmd	*lst_index(t_lstcmd *lst, int index)
 {
 	if (lst == NULL)
 		return (NULL);
@@ -77,3 +79,17 @@ t_envlist	*lst_index(t_envlist *lst, int index)
 	return (NULL);
 }
 
+int	lst_size(t_lstcmd *lstcmd)
+{
+	int	size;
+
+	if (lstcmd == NULL)
+		return (0);
+	size = 0;
+	while (lstcmd)
+	{
+		size++;
+		lstcmd = lstcmd->next;
+	}
+	return (size);
+}

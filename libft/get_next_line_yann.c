@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_yann.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yrio <yrio@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: rihoy <rihoy@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 14:28:51 by yrio              #+#    #+#             */
-/*   Updated: 2024/02/13 09:16:45 by yrio             ###   ########.fr       */
+/*   Updated: 2024/04/21 13:17:22 by rihoy            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ char	*ft_strdup_gnl(char *str)
 {
 	char	*dup;
 	size_t	size;
-	
+
 	size = ft_strlen(str) + 1;
 	dup = malloc(size * sizeof(char));
 	if (!dup)
@@ -51,12 +51,14 @@ char	*ft_strjoin_gnl(char *s1, char *s2, size_t size)
 	char	*str;
 	size_t	size_s1;
 
-	if (!s1 || !s2)
+	if (!s1)
 		return (NULL);
+	if (!s2 || !s2[0])
+		return (free(s1), NULL);
 	size_s1 = ft_strlen(s1);
 	str = malloc((size_s1 + size + 1) * sizeof(char));
 	if (!str)
-		return (NULL);
+		return (free(s1), NULL);
 	ft_strlcpy_gnl(str, s1, size_s1 + 1);
 	ft_strlcpy_gnl((str + size_s1), s2, size + 1);
 	free(s1);
@@ -81,8 +83,8 @@ int	putbuf(char *line, char *buf)
 	}
 	return (to_copy);
 }
-
-char	*get_next_line(int fd)
+/*
+char	*get_next_line_yann(int fd)
 {
 	static char	buf[BUFFER_SIZE + 1];
 	char		*line;
@@ -90,7 +92,8 @@ char	*get_next_line(int fd)
 	int			to_copy;
 
 	line = ft_strdup_gnl(buf);
-	while (!ft_strchr(line, '\n') && (countread = read(fd, buf, BUFFER_SIZE)) > 0)
+	while (!ft_strchr(line, '\n') && (countread = \
+	read(fd, buf, BUFFER_SIZE)) > 0)
 	{
 		buf[countread] = '\0';
 		line = ft_strjoin_gnl(line, buf, countread);
@@ -102,7 +105,7 @@ char	*get_next_line(int fd)
 	return (line);
 }
 
-/*
+
 int	main(void)
 {
 	char	*line;
